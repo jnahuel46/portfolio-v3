@@ -79,15 +79,15 @@ const menuitems = [
 	.nav-item:nth-child(4) { animation-delay: 0.4s; }
 </style>
 
-<header data-testId="header" class="mb-20 mt-5 flex flex-col items-center justify-between lg:flex-row fade-in-nav">
+<header data-testId="header" class="mb-20 mt-5 ml-20 lg:ml-24 flex flex-col items-start justify-start lg:flex-row fade-in-nav">
 	<Astronav>
-		<div class="flex w-full items-center justify-between lg:w-auto">
+		<div class="flex w-full items-center justify-start lg:w-auto lg:gap-4">
 			<Button size={'sm'} class="alert nav-item" name="Download CV">Download CV</Button>
 			<div class="block lg:hidden nav-item">
 				<MenuIcon class="h-4 w-4 text-black dark:text-white" />
 			</div>
 		</div>
-		<MenuItems class="mt-2 hidden w-full lg:mt-0 lg:flex lg:w-auto">
+		<MenuItems class="mt-2 hidden w-full lg:mt-0 lg:flex lg:w-auto lg:ml-4">
 			<ul class="flex flex-col lg:flex-row lg:gap-3">
 				{
 					menuitems.map((item, index) => (
