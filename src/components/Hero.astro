@@ -1,0 +1,59 @@
+---
+---
+
+<section 
+  id="home"
+  data-section="home"
+  data-testid="hero"
+  class="min-h-[55vh] md:min-h-[80vh] flex items-center px-8 lg:px-16 xl:px-24 pt-8"
+>
+  <div class="max-w-6xl w-full mx-auto">
+    <div class="hero-content opacity-0 transform translate-y-8">
+      <!-- Intro line -->
+      <p class="text-accent font-monospace text-base md:text-lg mb-3 md:mb-4">
+        Hi, my name is
+      </p>
+      
+      <!-- Giant name -->
+      <h1 class="text-text-primary font-sans font-bold text-4xl md:text-6xl lg:text-7xl xl:text-8xl leading-tight mb-1 md:mb-2">
+        Jeremias Muriette.
+      </h1>
+      
+      <!-- Subtitle -->
+      <h2 class="text-text-secondary font-sans font-bold text-3xl md:text-5xl lg:text-6xl xl:text-7xl leading-tight mb-6 md:mb-8">
+        I create digital experiences.
+      </h2>
+      
+      <!-- Description -->
+      <p class="text-text-muted text-base md:text-lg max-w-2xl leading-relaxed mb-8 md:mb-10">
+        I'm a Senior Software Engineer specialized in React.js, Next.js, TypeScript, and AWS.
+        I build scalable applications and optimize performance for high-traffic websites.
+      </p>
+      
+      <!-- CTA Button -->
+      <a 
+        href="#projects"
+        class="inline-block px-8 py-4 border-2 border-accent text-accent font-monospace text-sm tracking-wider hover:bg-accent hover:bg-opacity-10 transition-all duration-300 rounded-sm hover:-translate-y-1 hover:shadow-lg hover:shadow-accent/25"
+      >
+        Check out my work!
+      </a>
+    </div>
+  </div>
+</section>
+
+<style>
+  @keyframes heroFadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .hero-content {
+    animation: heroFadeIn 1s ease-out 0.2s forwards;
+  }
+</style>

@@ -1,0 +1,109 @@
+---
+import Button from '@components/ui/Button.astro';
+import ToggleTheme from '@components/ui/ToggleTheme.astro';
+import { Astronav, MenuIcon, MenuItems } from 'astro-navbar';
+
+
+const menuitems = [
+	{
+		title: 'About',
+		path: '#about',
+	},
+	{
+		title: 'Projects',
+		path: '#projects',
+	},
+	{
+		title: 'Contact',
+		path: '#contact',
+	},
+];
+---
+
+<script>
+	// Add animation completion handler
+	document.addEventListener('DOMContentLoaded', () => {
+		const navbar = document.querySelector('.fade-in-nav');
+		navbar?.addEventListener('animationend', () => {
+			document.body.classList.add('navbar-animation-complete');
+		});
+
+		// Handle CV download button click
+		const button = document.querySelector('button.alert');
+		button?.addEventListener('click', () => {
+			// Create a temporary link element
+			const enlace = document.createElement('a');
+			// Set the href property of the link with the path to the PDF file
+			enlace.href = '/cv.pdf';
+
+			// Set the download attribute so that the browser suggests a file name and enables the download
+			enlace.download = 'cv-muriette-jeremias.pdf';
+
+			// Add the link to the document
+			document.body.appendChild(enlace);
+
+			// Simulate a click on the link to initiate the download
+			enlace.click();
+
+			// Remove the link from the document after the download
+			document.body.removeChild(enlace);
+		});
+	});
+</script>
+
+<style>
+	@keyframes fadeInDown {
+		from {
+			opacity: 0;
+			transform: translateY(-20px);
+		}
+		to {
+			opacity: 1;
+			transform: translateY(0);
+		}
+	}
+
+	.fade-in-nav {
+		animation: fadeInDown 0.8s ease-out forwards;
+		opacity: 0;
+	}
+
+	.nav-item {
+		opacity: 0;
+		animation: fadeInDown 0.8s ease-out forwards;
+	}
+
+	.nav-item:nth-child(1) { animation-delay: 0.1s; }
+	.nav-item:nth-child(2) { animation-delay: 0.2s; }
+	.nav-item:nth-child(3) { animation-delay: 0.3s; }
+	.nav-item:nth-child(4) { animation-delay: 0.4s; }
+</style>
+
+<header data-testId="header" class="mb-20 mt-5 flex flex-col items-center justify-between lg:flex-row fade-in-nav">
+	<Astronav>
+		<div class="flex w-full items-center justify-between lg:w-auto">
+			<Button size={'sm'} class="alert nav-item" name="Download CV">Download CV</Button>
+			<div class="block lg:hidden nav-item">
+				<MenuIcon class="h-4 w-4 text-black dark:text-white" />
+			</div>
+		</div>
+		<MenuItems class="mt-2 hidden w-full lg:mt-0 lg:flex lg:w-auto">
+			<ul class="flex flex-col lg:flex-row lg:gap-3">
+				{
+					menuitems.map((item, index) => (
+						<li class="nav-item">
+							<a
+								aria-label="navigation link"
+								href={item.path}
+								class="hover:text-cyan dark:hover:text-cyan flex py-2 text-black dark:text-white lg:px-3"
+							>
+								{item.title}
+							</a>
+						</li>
+					))
+				}
+				<li class="nav-item"><ToggleTheme /></li>
+			</ul>
+		</MenuItems>
+	</Astronav>
+</header>

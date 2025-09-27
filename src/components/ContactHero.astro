@@ -1,0 +1,35 @@
+---
+import Social from '@components/ui/Social.astro';
+---
+
+<style>
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .fade-in-contact {
+    opacity: 0;
+  }
+
+  /* Only start animation when hero is done */
+  :global(body.navbar-animation-complete) .fade-in-contact {
+    animation: fadeIn 1s ease-out 0.5s forwards;
+  }
+</style>
+
+<section
+	data-testid="contact-hero"
+	id="contact-hero"
+	class="flex mt-20 flex-col flex-wrap items-center justify-center gap-8 text-black dark:text-white mb-40 fade-in-contact"
+>
+	<div class="flex flex-col gap-8 lg:flex lg:flex-row lg:gap-20">
+		<Social />
+	</div>
+</section>

@@ -1,0 +1,203 @@
+---
+import Footer from '@components/Footer.astro';
+import Sidebar from '@components/Sidebar.astro';
+import TypewriterHeader from '@components/TypewriterHeader.astro';
+import { SEO } from 'astro-seo';
+
+export interface LayoutProps {
+	title: string;
+}
+
+const { title = 'Jeremias Muriette | Software Engineer' } = Astro.props as LayoutProps;
+---
+
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth" data-testid="html">
+	<head>
+		<SEO
+			title="Muriette Jeremias"
+			description="A heavily optimized description full of well-researched keywords."
+		/>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="generator" content={Astro.generator} />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+		<title>{title}</title>
+	</head>
+	<body
+		class="bg-dark-bg text-text-secondary font-sans min-h-screen relative"
+	>
+		<TypewriterHeader />
+		<Sidebar />
+		<!-- Main content area with sidebar offset and header offset -->
+		<div class="ml-20 lg:ml-24 min-h-screen pt-16">
+			<slot />
+			<Footer />
+		</div>
+		<style is:global>
+			/* Improve Page speed */
+			/* https://css-tricks.com/almanac/properties/c/content-visibility/ */
+			img {
+				content-visibility: auto;
+			}
+
+			/* Smooth scrolling */
+			html {
+				scroll-behavior: smooth;
+			}
+
+			/* Custom cursor effects */
+			* {
+				cursor: none;
+			}
+
+			.cursor {
+				position: fixed;
+				width: 20px;
+				height: 20px;
+				border-radius: 50%;
+				background: #22d3ee;
+				pointer-events: none;
+				z-index: 9999;
+				opacity: 0.8;
+				transition: transform 0.1s ease;
+			}
+
+			.cursor-glow {
+				position: fixed;
+				width: 300px;
+				height: 300px;
+				border-radius: 50%;
+				background: radial-gradient(circle, rgba(34, 211, 238, 0.03) 0%, transparent 70%);
+				pointer-events: none;
+				z-index: 9998;
+				transition: transform 0.3s ease;
+			}
+
+			/* Hover effects for links and buttons */
+			a, button {
+				cursor: none !important;
+			}
+
+			a:hover ~ .cursor,
+			button:hover ~ .cursor {
+				transform: scale(1.5);
+				background: rgba(34, 211, 238, 1);
+			}
+
+			/* Selection styles */
+			::selection {
+				background-color: rgba(34, 211, 238, 0.2);
+				color: #ffffff;
+			}
+
+			/* Focus styles */
+			*:focus {
+				outline: 2px solid #22d3ee;
+				outline-offset: 2px;
+			}
+
+			/* Light theme overrides */
+			.light {
+				--tw-bg-opacity: 1;
+				background-color: rgb(248 250 252 / var(--tw-bg-opacity));
+				color: rgb(15 23 42 / var(--tw-text-opacity));
+			}
+
+			.light .bg-dark-bg {
+				background-color: #f8fafc !important;
+			}
+
+			.light .bg-dark-secondary {
+				background-color: #ffffff !important;
+			}
+
+			.light .text-text-primary {
+				color: #0f172a !important;
+			}
+
+			.light .text-text-secondary {
+				color: #334155 !important;
+			}
+
+			.light .text-text-muted {
+				color: #64748b !important;
+			}
+
+			.light .border-text-muted {
+				border-color: #cbd5e1 !important;
+			}
+
+			.light .border-dark-secondary {
+				border-color: #e2e8f0 !important;
+			}
+
+			/* Header background in light mode */
+			.light header {
+				background-color: rgba(248, 250, 252, 0.8) !important;
+				backdrop-filter: blur(12px);
+			}
+
+			.light .bg-dark-bg\/80 {
+				background-color: rgba(248, 250, 252, 0.8) !important;
+			}
+
+			/* Scrollbar styling */
+			::-webkit-scrollbar {
+				width: 8px;
+			}
+
+			::-webkit-scrollbar-track {
+				background: #1a1a1a;
+			}
+
+			::-webkit-scrollbar-thumb {
+				background: #999999;
+				border-radius: 4px;
+			}
+
+			::-webkit-scrollbar-thumb:hover {
+				background: #22d3ee;
+			}
+		</style>
+
+		<script is:inline>
+			// Theme initialization - must run before content loads to prevent flash
+			(function() {
+				const theme = localStorage.getItem('theme') || 'dark';
+				document.documentElement.classList.add(theme);
+			})();
+			
+			// Cursor tracking
+			document.addEventListener('DOMContentLoaded', function() {
+				const cursor = document.createElement('div');
+				cursor.classList.add('cursor');
+				document.body.appendChild(cursor);
+
+				const cursorGlow = document.createElement('div');
+				cursorGlow.classList.add('cursor-glow');
+				document.body.appendChild(cursorGlow);
+
+				document.addEventListener('mousemove', function(e) {
+					cursor.style.left = e.clientX - 10 + 'px';
+					cursor.style.top = e.clientY - 10 + 'px';
+					cursorGlow.style.left = e.clientX - 150 + 'px';
+					cursorGlow.style.top = e.clientY - 150 + 'px';
+				});
+
+				// Hide cursor when leaving viewport
+				document.addEventListener('mouseleave', function() {
+					cursor.style.opacity = '0';
+					cursorGlow.style.opacity = '0';
+				});
+
+				document.addEventListener('mouseenter', function() {
+					cursor.style.opacity = '0.8';
+					cursorGlow.style.opacity = '1';
+				});
+			});
+		</script>
+	</body>
+</html>
