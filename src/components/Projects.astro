@@ -15,6 +15,7 @@ import todoAppImg from '../assets/images/todo-app.png';
 import restServerImg from '../assets/images/rest-server.png';
 import nextDashboardImg from '../assets/images/next-js-dashboard.png';
 import projectImg from '../assets/images/project.png';
+import chatAiImg from '../assets/images/chat-ai.png';
 
 const projects = await getCollection('projects', ({ data }) => {
 	return !data.inProgress;
@@ -24,6 +25,8 @@ const projects = await getCollection('projects', ({ data }) => {
 const sortedProjects = projects.sort((a, b) => {
 	if (a.id === 'project-00.md') return -1;
 	if (b.id === 'project-00.md') return 1;
+	if (a.id === 'project-001.md') return -1;
+	if (b.id === 'project-001.md') return 1;
 	if (a.id === 'project-0.md') return -1;
 	if (b.id === 'project-0.md') return 1;
 	return a.id.localeCompare(b.id);
@@ -46,7 +49,8 @@ const imageMap = {
 	'todo-app': todoAppImg,
 	'rest-server': restServerImg,
 	'next-js-dashboard': nextDashboardImg,
-	'project': projectImg
+	'project': projectImg,
+	'chat-ai': chatAiImg
 };
 ---
 
@@ -153,7 +157,7 @@ const imageMap = {
       <h3 class="text-text-primary text-2xl font-bold text-center mb-12">Other Noteworthy Projects</h3>
       
       <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {sortedProjects.slice(3, 9).map((project) => (
+        {sortedProjects.slice(3, 11).map((project) => (
           <div class="bg-dark-secondary p-6 rounded-lg border border-text-muted hover:border-accent hover:-translate-y-2 transition-all duration-300 group">
             <div class="flex justify-between items-start mb-6">
               <svg class="w-10 h-10 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
