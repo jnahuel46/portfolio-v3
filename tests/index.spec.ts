@@ -53,6 +53,27 @@ test.describe('stage select tabs', () => {
 	});
 });
 
+test.describe('galaga screen', () => {
+	test('the attract loop is actually animating', async ({ page }) => {
+		await page.getByTestId('hero').scrollIntoViewIfNeeded();
+
+		const canvas = page.locator('#galaga-canvas');
+		await expect(canvas).toBeVisible();
+
+		// Comparing two frames beats asserting on the score, which depends on a
+		// shot connecting; the starfield guarantees motion every frame.
+		const sample = () =>
+			page.evaluate(() => {
+				const c = document.getElementById('galaga-canvas') as HTMLCanvasElement;
+				return c.getContext('2d')!.getImageData(0, 0, c.width, c.height).data.join(',');
+			});
+
+		const before = await sample();
+		await page.waitForTimeout(600);
+		expect(await sample()).not.toBe(before);
+	});
+});
+
 test.describe('back to top', () => {
 	test('appears only after scrolling, then returns to the top', async ({ page }) => {
 		const button = page.getByTestId('back-to-top-button');

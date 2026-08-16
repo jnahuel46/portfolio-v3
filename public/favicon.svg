@@ -1,11 +1,13 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" shape-rendering="crispEdges">
-	<rect width="16" height="16" fill="#10101c" />
-	<!-- Cartridge body -->
-	<path fill="#3ff0e0" d="M3 1h10v13H3z" />
-	<!-- Label window -->
-	<path fill="#10101c" d="M5 3h6v4H5z" />
-	<!-- Contact ridges -->
-	<path fill="#ff5fa2" d="M5 9h6v1H5zM5 11h6v1H5z" />
-	<!-- Bottom notch -->
-	<path fill="#10101c" d="M6 14h4v2H6z" />
+	<rect width="16" height="16" fill="#000000" />
+	<!-- Galaga fighter: white hull, red wing flashes, blue thrusters -->
+	<path fill="#ffffff" d="M7 1h2v3H7z" />
+	<path fill="#ffffff" d="M6 4h4v2H6z" />
+	<path fill="#e52521" d="M7 5h2v2H7z" />
+	<path fill="#ffffff" d="M5 6h6v2H5z" />
+	<path fill="#ffffff" d="M2 8h12v2H2z" />
+	<path fill="#e52521" d="M2 8h2v4H2zM12 8h2v4h-2z" />
+	<path fill="#ffffff" d="M4 10h2v3H4zM10 10h2v3h-2z" />
+	<path fill="#ffffff" d="M7 10h2v4H7z" />
+	<path fill="#2c56e0" d="M4 13h2v2H4zM10 13h2v2h-2zM7 14h2v2H7z" />
 </svg>

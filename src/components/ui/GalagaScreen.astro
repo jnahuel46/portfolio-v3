@@ -1,0 +1,447 @@
+---
+// A CRT playing an endless Galaga attract loop. Everything is drawn on a
+// 96x128 virtual canvas with smoothing off, so the sprites stay true pixels
+// however large the set gets scaled.
+---
+
+<figure class="mx-auto w-full max-w-sm">
+	<!-- TV shell -->
+	<div class="bg-panel-hi pixel-frame frame-line p-3">
+		<div class="bg-void pixel-frame frame-cyan relative aspect-3/4 w-full">
+			<!-- HUD lives in the DOM so it uses the real display face -->
+			<div
+				class="font-display text-pixel-2xs pointer-events-none absolute inset-x-0 top-0 z-10 flex justify-between p-2"
+			>
+				<span class="text-red animate-blink">1UP</span>
+				<span id="galaga-score" class="text-text">00000</span>
+			</div>
+			<canvas id="galaga-canvas" class="h-full w-full" aria-hidden="true"></canvas>
+		</div>
+	</div>
+
+	<!-- Stand -->
+	<div class="mx-auto flex w-full flex-col items-center">
+		<div class="bg-panel-hi h-4 w-10"></div>
+		<div class="bg-line h-2 w-24"></div>
+	</div>
+
+	<figcaption class="text-muted font-display text-pixel-2xs mt-4 text-center">
+		NOW PLAYING — GALAGA
+	</figcaption>
+</figure>
+
+<script>
+	function initGalaga() {
+		const el = document.getElementById('galaga-canvas');
+		if (!(el instanceof HTMLCanvasElement)) return;
+		const context = el.getContext('2d');
+		if (!context) return;
+
+		const canvas = el;
+		const ctx = context;
+		const scoreEl = document.getElementById('galaga-score');
+
+		// Virtual resolution. Everything below is in these units.
+		const W = 96;
+		const H = 128;
+
+		const C: Record<string, string> = {
+			r: '#e52521', // Galaga red
+			w: '#ffffff',
+			b: '#2c56e0',
+			y: '#ffc907',
+			c: '#4fc3f7',
+			p: '#a050c8', // boss body
+			t: '#20c8a8', // boss wings
+		};
+
+		// 8x8 sprites. '.' is transparent; every other char indexes C.
+		const SPRITES: Record<string, string[]> = {
+			bee: [
+				'.y....y.',
+				'.yy..yy.',
+				'..yyyy..',
+				'.brrrrb.',
+				'bbrrrrbb',
+				'bb.rr.bb',
+				'.b....b.',
+				'........',
+			],
+			butterfly: [
+				'..r..r..',
+				'..rrrr..',
+				'.rwwwwr.',
+				'rrwwwwrr',
+				'bb.rr.bb',
+				'.b.rr.b.',
+				'.b....b.',
+				'........',
+			],
+			boss: [
+				'..p..p..',
+				'..pppp..',
+				'.tpyypt.',
+				'ttpyyptt',
+				'tt.pp.tt',
+				'.t.pp.t.',
+				'.t....t.',
+				'........',
+			],
+			fighter: [
+				'...ww...',
+				'...ww...',
+				'..wwww..',
+				'.wwrrww.',
+				'.wwrrww.',
+				'wwwwwwww',
+				'w.w..w.w',
+				'w......w',
+			],
+		};
+
+		// Four frames: a spark that blooms outward and scatters.
+		const BOOM: string[][] = [
+			[
+				'........',
+				'........',
+				'...yy...',
+				'..yrry..',
+				'..yrry..',
+				'...yy...',
+				'........',
+				'........',
+			],
+			[
+				'........',
+				'..y..y..',
+				'..yrry..',
+				'.yrrrry.',
+				'.yrrrry.',
+				'..yrry..',
+				'..y..y..',
+				'........',
+			],
+			[
+				'.y.y.y.y',
+				'..y..y..',
+				'.y.rr.y.',
+				'y..rr..y',
+				'y..rr..y',
+				'.y.rr.y.',
+				'..y..y..',
+				'y.y.y.y.',
+			],
+			[
+				'y.......',
+				'...y...y',
+				'.y....y.',
+				'....y...',
+				'y...y..y',
+				'..y.....',
+				'.y....y.',
+				'.....y..',
+			],
+		];
+
+		type Enemy = {
+			kind: 'bee' | 'butterfly' | 'boss';
+			col: number;
+			row: number;
+			// Home slot in the formation
+			hx: number;
+			hy: number;
+			x: number;
+			y: number;
+			alive: boolean;
+			diving: boolean;
+			t: number; // dive progress 0..1
+			// Cubic control points for the dive path
+			cx1: number;
+			cy1: number;
+			cx2: number;
+			cy2: number;
+			tx: number;
+			ty: number;
+		};
+
+		type Shot = { x: number; y: number; vy: number; from: 'player' | 'enemy' };
+		type Boom = { x: number; y: number; t: number };
+		type Star = { x: number; y: number; v: number; c: string };
+
+		const COLS = 6;
+		const ROWS = 3;
+		const ROW_KIND = ['boss', 'butterfly', 'bee'] as const;
+
+		let enemies: Enemy[] = [];
+		let shots: Shot[] = [];
+		let booms: Boom[] = [];
+		let stars: Star[] = [];
+		let player = { x: W / 2 - 4, target: W / 2 - 4 };
+		let score = 0;
+		let nextDive = 1.2;
+		let nextShot = 0.5;
+		let raf = 0;
+		let last = 0;
+		let elapsed = 0;
+
+		const reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+		function slotX(col: number) {
+			return 12 + col * 12;
+		}
+		function slotY(row: number) {
+			return 26 + row * 12;
+		}
+
+		function spawnFormation() {
+			enemies = [];
+			for (let row = 0; row < ROWS; row++) {
+				for (let col = 0; col < COLS; col++) {
+					enemies.push({
+						kind: ROW_KIND[row],
+						col,
+						row,
+						hx: slotX(col),
+						hy: slotY(row),
+						x: slotX(col),
+						y: slotY(row),
+						alive: true,
+						diving: false,
+						t: 0,
+						cx1: 0,
+						cy1: 0,
+						cx2: 0,
+						cy2: 0,
+						tx: 0,
+						ty: 0,
+					});
+				}
+			}
+		}
+
+		function seedStars() {
+			stars = [];
+			const palette = ['#ffffff', '#ffffff', '#4fc3f7', '#ffc907', '#e52521'];
+			for (let i = 0; i < 26; i++) {
+				stars.push({
+					x: Math.floor(Math.random() * W),
+					y: Math.floor(Math.random() * H),
+					v: 6 + Math.random() * 18,
+					c: palette[Math.floor(Math.random() * palette.length)],
+				});
+			}
+		}
+
+		function drawSprite(rows: string[], x: number, y: number) {
+			for (let r = 0; r < rows.length; r++) {
+				const line = rows[r];
+				for (let c = 0; c < line.length; c++) {
+					const ch = line[c];
+					if (ch === '.') continue;
+					ctx.fillStyle = C[ch] ?? '#ffffff';
+					ctx.fillRect(Math.round(x) + c, Math.round(y) + r, 1, 1);
+				}
+			}
+		}
+
+		function startDive(enemy: Enemy) {
+			enemy.diving = true;
+			enemy.t = 0;
+			// Swing wide to one side, then sweep across the player's lane.
+			const dir = Math.random() < 0.5 ? -1 : 1;
+			enemy.cx1 = enemy.hx + dir * 34;
+			enemy.cy1 = enemy.hy + 26;
+			enemy.cx2 = player.x - dir * 24;
+			enemy.cy2 = H - 42;
+			enemy.tx = player.x + (Math.random() * 24 - 12);
+			enemy.ty = H + 10;
+		}
+
+		function bezier(p0: number, p1: number, p2: number, p3: number, t: number) {
+			const u = 1 - t;
+			return u * u * u * p0 + 3 * u * u * t * p1 + 3 * u * t * t * p2 + t * t * t * p3;
+		}
+
+		function update(dt: number) {
+			elapsed += dt;
+
+			for (const star of stars) {
+				star.y += star.v * dt;
+				if (star.y > H) {
+					star.y = -1;
+					star.x = Math.floor(Math.random() * W);
+				}
+			}
+
+			// The whole formation breathes side to side.
+			const sway = Math.sin(elapsed * 0.9) * 5;
+
+			const living = enemies.filter((e) => e.alive);
+			if (living.length === 0) {
+				spawnFormation();
+				return;
+			}
+
+			for (const enemy of enemies) {
+				if (!enemy.alive) continue;
+				if (!enemy.diving) {
+					enemy.x = enemy.hx + sway;
+					enemy.y = enemy.hy;
+					continue;
+				}
+
+				enemy.t += dt * 0.55;
+				if (enemy.t >= 1) {
+					// Flew off the bottom — re-enter at its slot.
+					enemy.diving = false;
+					enemy.t = 0;
+					enemy.x = enemy.hx;
+					enemy.y = enemy.hy;
+					continue;
+				}
+				enemy.x = bezier(enemy.hx + sway, enemy.cx1, enemy.cx2, enemy.tx, enemy.t);
+				enemy.y = bezier(enemy.hy, enemy.cy1, enemy.cy2, enemy.ty, enemy.t);
+			}
+
+			nextDive -= dt;
+			if (nextDive <= 0) {
+				nextDive = 1.1 + Math.random() * 1.6;
+				const idle = enemies.filter((e) => e.alive && !e.diving);
+				if (idle.length) startDive(idle[Math.floor(Math.random() * idle.length)]);
+			}
+
+			// The fighter tracks whoever is diving, otherwise drifts.
+			const threat = enemies.find((e) => e.alive && e.diving);
+			player.target = threat
+				? Math.max(2, Math.min(W - 10, threat.x))
+				: W / 2 - 4 + Math.sin(elapsed * 0.6) * 26;
+			player.x += (player.target - player.x) * Math.min(1, dt * 4);
+
+			nextShot -= dt;
+			if (nextShot <= 0) {
+				nextShot = 0.42 + Math.random() * 0.3;
+				shots.push({ x: player.x + 3, y: H - 22, vy: -84, from: 'player' });
+			}
+
+			for (const shot of shots) shot.y += shot.vy * dt;
+			shots = shots.filter((s) => s.y > -4 && s.y < H + 4);
+
+			// Collisions
+			for (const shot of shots) {
+				if (shot.from !== 'player') continue;
+				for (const enemy of enemies) {
+					if (!enemy.alive) continue;
+					if (
+						shot.x >= enemy.x &&
+						shot.x <= enemy.x + 8 &&
+						shot.y >= enemy.y &&
+						shot.y <= enemy.y + 8
+					) {
+						enemy.alive = false;
+						shot.y = -99;
+						booms.push({ x: enemy.x, y: enemy.y, t: 0 });
+						score += enemy.kind === 'boss' ? 150 : enemy.kind === 'butterfly' ? 80 : 50;
+						if (scoreEl) scoreEl.textContent = String(score).padStart(5, '0');
+						break;
+					}
+				}
+			}
+
+			for (const boom of booms) boom.t += dt;
+			booms = booms.filter((b) => b.t < 0.32);
+		}
+
+		function render() {
+			ctx.fillStyle = '#000000';
+			ctx.fillRect(0, 0, W, H);
+
+			for (const star of stars) {
+				ctx.fillStyle = star.c;
+				ctx.fillRect(Math.round(star.x), Math.round(star.y), 1, 1);
+			}
+
+			for (const enemy of enemies) {
+				if (!enemy.alive) continue;
+				drawSprite(SPRITES[enemy.kind], enemy.x, enemy.y);
+			}
+
+			for (const boom of booms) {
+				const frame = Math.min(BOOM.length - 1, Math.floor((boom.t / 0.32) * BOOM.length));
+				drawSprite(BOOM[frame], boom.x, boom.y);
+			}
+
+			for (const shot of shots) {
+				ctx.fillStyle = shot.from === 'player' ? '#ffffff' : '#e52521';
+				ctx.fillRect(Math.round(shot.x), Math.round(shot.y), 1, 3);
+			}
+
+			drawSprite(SPRITES.fighter, player.x, H - 14);
+		}
+
+		function frame(now: number) {
+			// Clamp so a backgrounded tab does not teleport the simulation.
+			const dt = Math.min(0.05, (now - last) / 1000 || 0);
+			last = now;
+			update(dt);
+			render();
+			raf = requestAnimationFrame(frame);
+		}
+
+		function resize() {
+			const dpr = Math.min(window.devicePixelRatio || 1, 2);
+			const rect = canvas.getBoundingClientRect();
+			// Integer scale keeps every virtual pixel the same size on screen.
+			const scale = Math.max(1, Math.floor((rect.width * dpr) / W));
+			canvas.width = W * scale;
+			canvas.height = H * scale;
+			ctx.setTransform(scale, 0, 0, scale, 0, 0);
+			ctx.imageSmoothingEnabled = false;
+		}
+
+		function stop() {
+			cancelAnimationFrame(raf);
+			raf = 0;
+		}
+
+		function start() {
+			if (raf) return;
+			last = performance.now();
+			raf = requestAnimationFrame(frame);
+		}
+
+		spawnFormation();
+		seedStars();
+		resize();
+		render();
+
+		let resizeTimer: number;
+		window.addEventListener('resize', () => {
+			clearTimeout(resizeTimer);
+			resizeTimer = window.setTimeout(() => {
+				resize();
+				render();
+			}, 150);
+		});
+
+		if (reduced.matches) return;
+
+		// Only run while the screen is actually on screen.
+		const io = new IntersectionObserver(
+			(entries) => {
+				for (const entry of entries) {
+					if (entry.isIntersecting && !document.hidden) start();
+					else stop();
+				}
+			},
+			{ threshold: 0.1 }
+		);
+		io.observe(canvas);
+
+		document.addEventListener('visibilitychange', () => {
+			if (document.hidden) stop();
+		});
+	}
+
+	initGalaga();
+	document.addEventListener('astro:page-load', initGalaga);
+</script>

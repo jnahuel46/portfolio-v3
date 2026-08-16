@@ -26,6 +26,13 @@ CSS-first theme tokens. The rules that keep the look coherent:
   depths of blinking pixels down a canvas behind the page. It is the single most
   recognisable thing about the cabinet, and it costs one 120-star canvas that pauses
   itself when the tab is hidden.
+- **Scale, don't reflow.** An arcade cabinet on a bigger screen shows the same picture,
+  bigger. Past 1920px and again at 2560px, `--ui-scale` and `--pixel-unit` step up
+  together: type, spacing, frames, bevels and focus rings all grow in proportion, so a
+  4px frame never ends up hairline beside 30px text. Containers are centred and widen to
+  `7xl`, which is what keeps ultrawide monitors from stranding the content on the left.
+  The root size is set as `calc(100% * var(--ui-scale))` so a reader's own browser
+  font-size preference survives.
 - **Photographs untouched.** The pixel styling lives in the chrome around images, not in
   the images themselves — they render at full fidelity through `astro:assets`.
 - **Two faces.** _Press Start 2P_ for display text — only ever at the small
@@ -46,7 +53,7 @@ Custom Tailwind utilities that do the visual heavy lifting:
 | `pixel-frame-raised` | Same, plus a hard drop shadow                                        |
 | `pixel-bevel`        | Inset light/dark bevel — reads as a physical key                     |
 | `pixel-press`        | Whole-pixel hover lift and press-down                                |
-| `frame-*`            | Recolours the frame (`frame-bright`, `frame-green`, `frame-mid`, `frame-dim`) |
+| `frame-*`            | Recolours the frame (`frame-cyan`, `frame-yellow`, `frame-red`, `frame-line`) |
 | `text-hard-shadow`   | Offset text shadow with no blur                                      |
 | `selectable`         | Blinking ▶ menu selector on hover/focus                              |
 | `crt-overlay`        | Fixed scanlines + vignette over the whole page                       |
@@ -55,9 +62,11 @@ Custom Tailwind utilities that do the visual heavy lifting:
 
 The arcade styling is deliberately not allowed to cost usability:
 
-- `prefers-reduced-motion` disables the blinking, flicker and scanline animation.
+- `prefers-reduced-motion` disables the blinking, flicker, scanlines, the starfield and
+  the Galaga attract loop — each falls back to a single static frame.
 - The stage-select tabs are a real ARIA tablist with arrow-key navigation.
-- A skip link is the first tab stop; focus rings are 4px and high-contrast.
+- A skip link is the first tab stop; focus rings are yellow, scale with the UI, and never
+  drop below 4px.
 - The custom pixel cursor is paired with the `selectable` ▶ marker so click affordance
   never depends on the cursor image alone.
 
@@ -70,7 +79,7 @@ The arcade styling is deliberately not allowed to cost usability:
 ├── src/
 │   ├── assets/images/
 │   ├── components/
-│   │   ├── ui/            SectionHeader, BackToTop, PixelTerminal
+│   │   ├── ui/            SectionHeader, BackToTop, GalagaScreen, PixelProjectArt
 │   │   ├── StatusBar.astro   arcade HUD, top
 │   │   ├── Sidebar.astro     section nav, left
 │   │   └── Hero / About / Experience / Projects / Contact / Footer
@@ -88,6 +97,13 @@ Adding a project means dropping a markdown file into `src/content/projects/` mat
 schema in [`content.config.ts`](src/content.config.ts). To give it a thumbnail, add the
 image to `src/assets/images/` and register it in the `sources` map in `Projects.astro`,
 keyed by the file's `img_alt`.
+
+The hero's centrepiece is
+[`GalagaScreen.astro`](src/components/ui/GalagaScreen.astro): a CRT running an endless
+Galaga attract loop on a 96×128 virtual canvas. Sprites are 8×8 character grids, the
+formation breathes, enemies dive along cubic bezier paths, and the fighter tracks
+whatever is diving at it. The canvas only runs while it is on screen and the tab is
+visible, and integer-scales so every virtual pixel lands on a whole device pixel.
 
 Backends have no screenshot worth showing, so they set `art:` instead and get a pixel-art
 diagram of the real architecture from
