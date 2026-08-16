@@ -90,7 +90,7 @@ const jobs = [
 							aria-selected={i === 0 ? 'true' : 'false'}
 							tabindex={i === 0 ? 0 : -1}
 							data-tab={job.id}
-							class="stage-tab text-dim hover:text-green font-display text-pixel-2xs hover:bg-panel shrink-0 px-4 py-4 text-left whitespace-nowrap transition-colors duration-100 lg:w-40"
+							class="stage-tab text-dim hover:text-cyan font-display text-pixel-2xs hover:bg-panel shrink-0 px-4 py-4 text-left whitespace-nowrap transition-colors duration-100 lg:w-40"
 						>
 							{job.tab}
 						</button>
@@ -111,14 +111,14 @@ const jobs = [
 						>
 							<h3 class="text-text text-pixel-xs sm:text-pixel-sm mb-2 leading-relaxed">
 								{job.role}
-								<span class="text-green block sm:inline"> @ {job.company}</span>
+								<span class="text-cyan block sm:inline"> @ {job.company}</span>
 							</h3>
 							<p class="text-muted font-display text-pixel-2xs mb-6">{job.period}</p>
 
 							<ul class="mb-6 space-y-3">
 								{job.bullets.map((bullet) => (
 									<li class="flex gap-3">
-										<span class="text-green shrink-0" aria-hidden="true">
+										<span class="text-cyan shrink-0" aria-hidden="true">
 											▸
 										</span>
 										<span class="text-dim">{bullet}</span>
@@ -128,9 +128,7 @@ const jobs = [
 
 							<ul class="flex flex-wrap gap-2">
 								{job.tags.map((tag) => (
-									<li class="bg-panel-hi text-green font-display text-pixel-2xs px-2 py-2">
-										{tag}
-									</li>
+									<li class="bg-panel-hi text-cyan font-display text-pixel-2xs px-2 py-2">{tag}</li>
 								))}
 							</ul>
 						</div>
@@ -143,7 +141,7 @@ const jobs = [
 
 <style>
 	.stage-tab[aria-selected='true'] {
-		background: var(--color-green);
+		background: var(--color-cyan);
 		color: var(--color-void);
 	}
 </style>

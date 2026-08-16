@@ -1,6 +1,7 @@
 ---
 import Footer from '@components/Footer.astro';
 import Sidebar from '@components/Sidebar.astro';
+import Starfield from '@components/Starfield.astro';
 import StatusBar from '@components/StatusBar.astro';
 import { Font } from 'astro:assets';
 import { SEO } from 'astro-seo';
@@ -41,14 +42,17 @@ const description =
 		/>
 	</head>
 
-	<body class="bg-void text-dim min-h-screen">
+	<!-- No background utility here: an opaque body would paint over the
+	     starfield canvas sitting at z-index:-10. The black is on <html>. -->
+	<body class="text-dim min-h-screen">
 		<a
 			href="#main"
-			class="bg-green text-void font-display text-pixel-xs sr-only px-4 py-3 focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-200"
+			class="bg-cyan text-void font-display text-pixel-xs sr-only px-4 py-3 focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-200"
 		>
 			SKIP TO CONTENT
 		</a>
 
+		<Starfield />
 		<StatusBar />
 		<Sidebar />
 

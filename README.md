@@ -15,12 +15,17 @@ CSS-first theme tokens. The rules that keep the look coherent:
 
 - **4px grid.** Every border, offset and shadow is a multiple of 4. `border-radius` is
   forced to `0` globally.
-- **One hue, ten colours.** Everything is green; hierarchy is brightness, never hue —
-  the way a phosphor monitor worked. Three surfaces (`shadow`/`void`/`panel`/`panel-hi`),
-  three accents (`green`/`bright`/`lime`), three text steps
-  (`text`/`dim`/`muted`, all clearing AA on the background) and one frame colour
-  (`line`). Lime is reserved for whatever must be found first on a screen: the focus
-  ring, the active nav tile, the featured marker.
+- **Galaga's colour discipline.** The cabinet keeps its text white and puts every hue
+  into the sprites, and so does this page. Body copy runs on three neutral steps
+  (`text`/`dim`/`muted`, all clearing AA on black); the sprite hues each own exactly one
+  job — `red` for the 1UP register and stage numbers, `yellow` for whatever must be
+  found first (focus ring, active tile, featured marker), `cyan` for everything
+  interactive, `blue` for structure behind the cyan, `green` for the illustrations.
+  That split is what keeps a multi-hue arcade palette from turning into confetti.
+- **A real starfield.** [`Starfield.astro`](src/components/Starfield.astro) drifts three
+  depths of blinking pixels down a canvas behind the page. It is the single most
+  recognisable thing about the cabinet, and it costs one 120-star canvas that pauses
+  itself when the tab is hidden.
 - **Photographs untouched.** The pixel styling lives in the chrome around images, not in
   the images themselves — they render at full fidelity through `astro:assets`.
 - **Two faces.** _Press Start 2P_ for display text — only ever at the small
@@ -83,6 +88,16 @@ Adding a project means dropping a markdown file into `src/content/projects/` mat
 schema in [`content.config.ts`](src/content.config.ts). To give it a thumbnail, add the
 image to `src/assets/images/` and register it in the `sources` map in `Projects.astro`,
 keyed by the file's `img_alt`.
+
+Backends have no screenshot worth showing, so they set `art:` instead and get a pixel-art
+diagram of the real architecture from
+[`PixelProjectArt.astro`](src/components/ui/PixelProjectArt.astro) — currently
+`microservices` and `rest-api`. New scenes are rect lists on a 64×36 grid.
+
+> Gotcha: those components build fills as `` `var(--color-${key})` ``, so the token names
+> never appear literally in the source. The palette block is declared `@theme static` for
+> exactly that reason — plain `@theme` tree-shakes any variable Tailwind cannot find in
+> the scanned files, which silently drops colours used only by the diagrams.
 
 ## Commands
 

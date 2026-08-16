@@ -12,6 +12,9 @@ const projects = defineCollection({
 		tags: z.array(z.string()),
 		link: z.string(),
 		img_alt: z.string().optional(),
+		// Backends have no screenshot worth showing. Setting this swaps the
+		// thumbnail for a pixel-art diagram of the actual architecture.
+		art: z.enum(['microservices', 'rest-api']).optional(),
 		goToRepo: z.string(),
 	}),
 });

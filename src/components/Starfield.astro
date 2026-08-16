@@ -1,0 +1,138 @@
+---
+// Galaga's scrolling starfield, the single most recognisable thing about the
+// cabinet. Stars drift downward at three depths and blink in the sprite hues.
+---
+
+<canvas id="starfield" class="fixed inset-0 -z-10 h-full w-full" aria-hidden="true"></canvas>
+
+<script>
+	function initStarfield() {
+		const el = document.getElementById('starfield');
+		if (!(el instanceof HTMLCanvasElement)) return;
+
+		const context = el.getContext('2d');
+		if (!context) return;
+
+		// Aliased after the guards so the nested functions below see non-null
+		// types without a `!` on every single use.
+		const canvas = el;
+		const ctx = context;
+
+		const COLORS = ['#ffffff', '#ffffff', '#ffffff', '#4fc3f7', '#ffc907', '#e52521'];
+		// Three depths: far stars are dim and slow, near stars bright and quick.
+		const LAYERS = [
+			{ count: 60, speed: 6, size: 2, alpha: 0.4 },
+			{ count: 34, speed: 14, size: 2, alpha: 0.7 },
+			{ count: 16, speed: 26, size: 3, alpha: 1 },
+		];
+
+		type Star = {
+			x: number;
+			y: number;
+			speed: number;
+			size: number;
+			alpha: number;
+			color: string;
+			// Galaga's stars wink on and off rather than fading.
+			phase: number;
+			period: number;
+		};
+
+		let stars: Star[] = [];
+		let width = 0;
+		let height = 0;
+		let frame = 0;
+
+		const reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+		function seed() {
+			stars = [];
+			for (const layer of LAYERS) {
+				for (let i = 0; i < layer.count; i++) {
+					stars.push({
+						x: Math.floor(Math.random() * width),
+						y: Math.floor(Math.random() * height),
+						speed: layer.speed,
+						size: layer.size,
+						alpha: layer.alpha,
+						color: COLORS[Math.floor(Math.random() * COLORS.length)],
+						phase: Math.random(),
+						period: 1.2 + Math.random() * 2.5,
+					});
+				}
+			}
+		}
+
+		function resize() {
+			// Cap the backing store at 2x; a starfield gains nothing from more.
+			const dpr = Math.min(window.devicePixelRatio || 1, 2);
+			width = window.innerWidth;
+			height = window.innerHeight;
+			canvas.width = Math.floor(width * dpr);
+			canvas.height = Math.floor(height * dpr);
+			ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+			ctx.imageSmoothingEnabled = false;
+			seed();
+		}
+
+		function draw(elapsed: number) {
+			ctx.clearRect(0, 0, width, height);
+
+			for (const star of stars) {
+				// Whole-pixel positions only, or the stars turn into grey smears.
+				const on = (elapsed / star.period + star.phase) % 1 < 0.82;
+				if (!on) continue;
+
+				ctx.globalAlpha = star.alpha;
+				ctx.fillStyle = star.color;
+				ctx.fillRect(Math.round(star.x), Math.round(star.y), star.size, star.size);
+			}
+
+			ctx.globalAlpha = 1;
+		}
+
+		function tick(now: number) {
+			const elapsed = now / 1000;
+			const delta = 1 / 60;
+
+			for (const star of stars) {
+				star.y += star.speed * delta;
+				if (star.y > height) {
+					star.y = -star.size;
+					star.x = Math.floor(Math.random() * width);
+				}
+			}
+
+			draw(elapsed);
+			frame = requestAnimationFrame(tick);
+		}
+
+		function start() {
+			cancelAnimationFrame(frame);
+			resize();
+			if (reduced.matches) {
+				draw(0);
+				return;
+			}
+			frame = requestAnimationFrame(tick);
+		}
+
+		let resizeTimer: number;
+		window.addEventListener('resize', () => {
+			clearTimeout(resizeTimer);
+			resizeTimer = window.setTimeout(start, 150);
+		});
+		reduced.addEventListener('change', start);
+
+		// Stop burning frames when the tab is hidden.
+		document.addEventListener('visibilitychange', () => {
+			if (document.hidden) cancelAnimationFrame(frame);
+			else if (!reduced.matches) frame = requestAnimationFrame(tick);
+		});
+
+		start();
+	}
+
+	initStarfield();
+	document.addEventListener('astro:page-load', initStarfield);
+</script>
