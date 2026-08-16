@@ -15,8 +15,11 @@ CSS-first theme tokens. The rules that keep the look coherent:
 
 - **4px grid.** Every border, offset and shadow is a multiple of 4. `border-radius` is
   forced to `0` globally.
-- **Limited palette.** A NES-ish set of six accents over three background shades. No
-  gradients other than the CRT overlay.
+- **One hue.** Neutral dark surfaces carry the structure; every piece of text and every
+  accent comes from a single green ramp (`--color-glow` → `--color-deep`), the way a
+  phosphor monitor only ever had one colour. Hierarchy is brightness, never hue.
+- **Photographs untouched.** The pixel styling lives in the chrome around images, not in
+  the images themselves — they render at full fidelity through `astro:assets`.
 - **Two faces.** _Press Start 2P_ for display text — only ever at the small
   `--text-pixel-*` sizes — and _VT323_ for body copy, which stays readable in
   paragraphs. Both are self-hosted at build time by Astro's font pipeline, so the page
@@ -35,18 +38,10 @@ Custom Tailwind utilities that do the visual heavy lifting:
 | `pixel-frame-raised` | Same, plus a hard drop shadow                                        |
 | `pixel-bevel`        | Inset light/dark bevel — reads as a physical key                     |
 | `pixel-press`        | Whole-pixel hover lift and press-down                                |
-| `frame-*`            | Recolours the frame (`frame-cyan`, `frame-yellow`, …)                |
+| `frame-*`            | Recolours the frame (`frame-bright`, `frame-green`, `frame-mid`, `frame-dim`) |
 | `text-hard-shadow`   | Offset text shadow with no blur                                      |
 | `selectable`         | Blinking ▶ menu selector on hover/focus                              |
 | `crt-overlay`        | Fixed scanlines + vignette over the whole page                       |
-
-### Photographs
-
-Real screenshots fight pixel art. Both [`About.astro`](src/components/About.astro) and
-[`Projects.astro`](src/components/Projects.astro) run their images through `getImage()`
-at a tiny width (72px and 160px), then scale them back up with
-`image-rendering: pixelated`. The result is genuine pixelation rather than a CSS filter —
-and it dropped total image weight from ~10MB to ~150KB.
 
 ## Accessibility
 

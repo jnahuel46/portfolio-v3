@@ -2,31 +2,15 @@
 interface Props {
 	number: string;
 	title: string;
-	/** Accent used for the stage number chip and the trailing rule. */
-	color?: 'cyan' | 'magenta' | 'yellow' | 'green';
 }
 
-const { number, title, color = 'cyan' } = Astro.props;
-
-const chip = {
-	cyan: 'bg-cyan text-void',
-	magenta: 'bg-magenta text-void',
-	yellow: 'bg-yellow text-void',
-	green: 'bg-green text-void',
-}[color];
-
-const rule = {
-	cyan: 'bg-cyan',
-	magenta: 'bg-magenta',
-	yellow: 'bg-yellow',
-	green: 'bg-green',
-}[color];
+const { number, title } = Astro.props;
 ---
 
 <div class="mb-10 flex items-center gap-4 lg:mb-14">
-	<span class={`font-display text-pixel-xs px-3 py-2 pixel-bevel ${chip}`}>{number}</span>
+	<span class="bg-green text-void font-display text-pixel-xs pixel-bevel px-3 py-2">{number}</span>
 	<h2 class="text-text text-pixel-sm sm:text-pixel-base lg:text-pixel-lg text-hard-shadow-sm">
 		{title}
 	</h2>
-	<span class={`h-1 flex-1 max-w-40 ${rule}`}></span>
+	<span class="bg-mid h-1 max-w-40 flex-1"></span>
 </div>

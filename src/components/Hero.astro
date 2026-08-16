@@ -1,11 +1,5 @@
 ---
 import PixelTerminal from '@components/ui/PixelTerminal.astro';
-
-const stats = [
-	{ label: 'LVL', value: '07', color: 'text-yellow' },
-	{ label: 'CLASS', value: 'ENGINEER', color: 'text-cyan' },
-	{ label: 'REGION', value: 'AR', color: 'text-green' },
-];
 ---
 
 <section
@@ -17,9 +11,9 @@ const stats = [
 	<div class="grid w-full max-w-6xl gap-12 lg:grid-cols-12 lg:items-center">
 		<div class="lg:col-span-7">
 			<p
-				class="text-magenta font-display text-pixel-2xs sm:text-pixel-xs mb-6 flex items-center gap-2"
+				class="text-green font-display text-pixel-2xs sm:text-pixel-xs mb-6 flex items-center gap-2"
 			>
-				<span class="bg-magenta inline-block h-2 w-2"></span>
+				<span class="bg-green inline-block h-2 w-2"></span>
 				PLAYER 1 — READY
 			</p>
 
@@ -27,36 +21,24 @@ const stats = [
 				<span class="text-text text-pixel-xl sm:text-pixel-2xl lg:text-pixel-3xl block"
 					>JEREMIAS</span
 				>
-				<span class="text-cyan text-pixel-xl sm:text-pixel-2xl lg:text-pixel-3xl block"
+				<span class="text-green text-pixel-xl sm:text-pixel-2xl lg:text-pixel-3xl block"
 					>MURIETTE</span
 				>
 			</h1>
 
-			<p class="text-yellow font-display text-pixel-xs sm:text-pixel-sm lg:text-pixel-base mb-8">
+			<p class="text-bright font-display text-pixel-xs sm:text-pixel-sm lg:text-pixel-base mb-8">
 				I BUILD DIGITAL EXPERIENCES
 			</p>
 
-			<!-- Stat strip, the way a character-select screen lists attributes. -->
-			<ul class="mb-8 flex flex-wrap gap-3">
-				{
-					stats.map((stat) => (
-						<li class="bg-panel pixel-frame frame-dim px-3 py-2">
-							<span class="text-line font-display text-pixel-2xs mr-2">{stat.label}</span>
-							<span class={`font-display text-pixel-2xs ${stat.color}`}>{stat.value}</span>
-						</li>
-					))
-				}
-			</ul>
-
 			<p class="text-dim mb-10 max-w-xl">
-				Senior Software Engineer specialised in React, Next.js, TypeScript and AWS. I build scalable
-				applications and squeeze performance out of high-traffic websites.
+				Senior Software Engineer specialised in React, Next.js, NestJS, TypeScript and AWS. I build
+				scalable applications and squeeze performance out of high-traffic websites.
 			</p>
 
 			<div class="flex flex-col gap-4 sm:flex-row">
 				<a
 					href="#projects"
-					class="bg-cyan text-void pixel-bevel pixel-press font-display text-pixel-2xs sm:text-pixel-xs inline-flex items-center justify-center gap-3 px-6 py-4"
+					class="bg-green text-void pixel-bevel pixel-press font-display text-pixel-2xs sm:text-pixel-xs inline-flex items-center justify-center gap-3 px-6 py-4"
 				>
 					<span aria-hidden="true">▶</span> START
 				</a>
@@ -64,7 +46,7 @@ const stats = [
 					href="/jere-muriette-se.pdf"
 					target="_blank"
 					rel="noopener noreferrer"
-					class="text-cyan pixel-frame frame-cyan pixel-press hover:bg-panel font-display text-pixel-2xs sm:text-pixel-xs inline-flex items-center justify-center px-6 py-4"
+					class="text-green pixel-frame frame-green pixel-press hover:bg-panel font-display text-pixel-2xs sm:text-pixel-xs inline-flex items-center justify-center px-6 py-4"
 				>
 					CONTINUE (CV)
 				</a>

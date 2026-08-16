@@ -6,21 +6,26 @@
    ========================================================================== */
 
 @theme {
-	/* --- Palette: NES-ish, deliberately limited ------------------------- */
+	/* --- Palette ---------------------------------------------------------
+	   Neutral dark surfaces carry the structure; everything that reads as
+	   text or accent comes from a single green ramp, the way a phosphor
+	   monitor only ever had one colour to work with. Hierarchy is brightness,
+	   never hue. */
 	--color-void: #10101c;
 	--color-panel: #1d1d2e;
 	--color-panel-hi: #2c2c44;
-	--color-line: #50506e;
+	--color-line: #4a6b52;
 
-	--color-text: #f0f0f8;
-	--color-dim: #a0a0c0;
-
-	--color-cyan: #3ff0e0;
-	--color-magenta: #ff5fa2;
-	--color-yellow: #ffcf3f;
+	/* Green ramp, brightest to dimmest. --color-green is the original accent. */
+	--color-glow: #c8ffc8;
+	--color-bright: #8dff8d;
 	--color-green: #5ce65c;
-	--color-red: #ff4f4f;
-	--color-purple: #a06fff;
+	--color-mid: #3fb84a;
+	--color-deep: #2a7233;
+
+	/* Semantic text roles, all drawn from the ramp above. */
+	--color-text: #e6ffe6;
+	--color-dim: #9fd4a5;
 
 	/* --- Type: display face stays tiny, body face carries the reading --- */
 	--font-display: var(--font-press-start), 'Courier New', monospace;
@@ -120,8 +125,9 @@
 		line-height: 1.4;
 	}
 
+	/* Photographs are left untouched — the pixel styling lives in the chrome
+	   around them, not in the images themselves. */
 	img {
-		image-rendering: pixelated;
 		content-visibility: auto;
 	}
 
@@ -129,18 +135,18 @@
 	   hover instead of a second cursor image — see .selectable below. */
 	body {
 		cursor:
-			url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='28' viewBox='0 0 14 14' shape-rendering='crispEdges'%3E%3Cpolygon points='0,0 0,11 3,8 5,13 8,12 6,7 10,7' fill='%2310101c'/%3E%3Cpolygon points='1,2 1,9 3,7 5,11 6,10 4,6 7,6' fill='%23f0f0f8'/%3E%3C/svg%3E")
+			url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='28' viewBox='0 0 14 14' shape-rendering='crispEdges'%3E%3Cpolygon points='0,0 0,11 3,8 5,13 8,12 6,7 10,7' fill='%2310101c'/%3E%3Cpolygon points='1,2 1,9 3,7 5,11 6,10 4,6 7,6' fill='%23e6ffe6'/%3E%3C/svg%3E")
 				0 0,
 			auto;
 	}
 
 	::selection {
-		background: var(--color-magenta);
+		background: var(--color-green);
 		color: var(--color-void);
 	}
 
 	:focus-visible {
-		outline: 4px solid var(--color-yellow);
+		outline: 4px solid var(--color-bright);
 		outline-offset: 4px;
 	}
 
@@ -159,7 +165,7 @@
 	}
 
 	::-webkit-scrollbar-thumb:hover {
-		background: var(--color-cyan);
+		background: var(--color-green);
 	}
 }
 
@@ -198,17 +204,14 @@
 		inset -4px -4px 0 0 rgb(0 0 0 / 0.45);
 }
 
-@utility frame-cyan {
-	--frame-color: var(--color-cyan);
-}
-@utility frame-magenta {
-	--frame-color: var(--color-magenta);
-}
-@utility frame-yellow {
-	--frame-color: var(--color-yellow);
+@utility frame-bright {
+	--frame-color: var(--color-bright);
 }
 @utility frame-green {
 	--frame-color: var(--color-green);
+}
+@utility frame-mid {
+	--frame-color: var(--color-mid);
 }
 @utility frame-dim {
 	--frame-color: var(--color-line);
@@ -250,7 +253,7 @@
 		left: -1.25em;
 		top: 50%;
 		translate: 0 -50%;
-		color: var(--color-yellow);
+		color: var(--color-bright);
 		opacity: 0;
 	}
 

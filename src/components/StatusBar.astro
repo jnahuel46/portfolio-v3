@@ -1,31 +1,61 @@
 ---
-// Arcade HUD pinned to the top of the viewport: player name on the left,
-// a typewritten role on the right. Mirrors a cabinet's "1UP / HI-SCORE" row.
-const roles = ['SENIOR SOFTWARE ENGINEER', 'REACT + NEXT.JS', 'TYPESCRIPT / NODE', 'AWS CERTIFIED'];
+import PixelIcon from '@components/ui/PixelIcon.astro';
+
+// Arcade HUD pinned to the top: player name on the left, a typewritten role in
+// the middle, and the three outbound links on the right.
+const roles = ['SENIOR SOFTWARE ENGINEER', 'REACT + NEXT.JS', 'NESTJS / NODE', 'AWS CERTIFIED'];
+
+const links = [
+	{ name: 'github', label: 'GITHUB', href: 'https://github.com/jnahuel46' },
+	{ name: 'linkedin', label: 'LINKEDIN', href: 'https://www.linkedin.com/in/jeremias-muriette/' },
+	{ name: 'cv', label: 'CV', href: '/jere-muriette-se.pdf' },
+] as const;
 ---
 
 <header
 	data-testid="header"
-	class="bg-void border-line fixed top-0 right-0 left-0 z-50 flex h-14 items-center justify-between border-b-4 px-3 md:h-16 md:px-6"
+	class="bg-void border-line fixed top-0 right-0 left-0 z-50 flex h-14 items-center justify-between gap-3 border-b-4 px-3 md:h-16 md:px-6"
 >
-	<div class="flex items-baseline gap-2 md:gap-4">
-		<span class="text-red font-display text-pixel-2xs md:text-pixel-xs animate-blink">1UP</span>
-		<span class="text-text font-display text-pixel-2xs md:text-pixel-sm text-hard-shadow-sm">
+	<div class="flex min-w-0 items-baseline gap-2 md:gap-4">
+		<span class="text-bright font-display text-pixel-2xs md:text-pixel-xs animate-blink">1UP</span>
+		<span
+			class="text-text font-display text-pixel-2xs md:text-pixel-sm text-hard-shadow-sm truncate"
+		>
 			JEREMIAS MURIETTE
 		</span>
 	</div>
 
-	<div class="hidden items-baseline gap-3 sm:flex">
+	<div class="hidden items-baseline gap-3 xl:flex">
 		<span class="text-line font-display text-pixel-2xs">JOB</span>
 		<span
 			id="role-ticker"
-			class="text-cyan font-display text-pixel-2xs md:text-pixel-xs"
+			class="text-green font-display text-pixel-2xs"
 			data-roles={JSON.stringify(roles)}
 		>
 			{roles[0]}
 		</span>
-		<span class="bg-cyan animate-blink inline-block h-3 w-2 md:h-4"></span>
+		<span class="bg-green animate-blink inline-block h-3 w-2"></span>
 	</div>
+
+	<ul class="flex shrink-0 items-center gap-2 md:gap-3">
+		{
+			links.map((link) => (
+				<li>
+					<a
+						href={link.href}
+						target="_blank"
+						rel="noopener noreferrer"
+						aria-label={link.label}
+						title={link.label}
+						class="text-green hover:text-void hover:bg-green pixel-frame frame-mid hover:frame-green pixel-press flex items-center gap-2 px-2 py-2 md:px-3"
+					>
+						<PixelIcon name={link.name} class="h-4 w-4 shrink-0" />
+						<span class="font-display text-pixel-2xs hidden md:inline">{link.label}</span>
+					</a>
+				</li>
+			))
+		}
+	</ul>
 </header>
 
 <script>

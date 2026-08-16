@@ -1,28 +1,12 @@
 ---
 import SectionHeader from '@components/ui/SectionHeader.astro';
 import engineerImage from '@assets/images/engineer.png';
-import { getImage } from 'astro:assets';
-
-// Downscale hard, then let CSS blow it back up with `image-rendering: pixelated`.
-// 72px source shown at ~288px is a clean 4x — real pixels, not a blur filter.
-const avatar = await getImage({ src: engineerImage, width: 72, format: 'png' });
-
-// Self-reported proficiency out of 12 cells. Tweak to taste.
-const skills = [
-	{ name: 'TYPESCRIPT', level: 11, color: 'bg-cyan' },
-	{ name: 'REACT / NEXT', level: 12, color: 'bg-cyan' },
-	{ name: 'NODE / NESTJS', level: 9, color: 'bg-green' },
-	{ name: 'AWS / AZURE', level: 9, color: 'bg-yellow' },
-	{ name: 'POSTGRES', level: 8, color: 'bg-magenta' },
-	{ name: 'DOCKER / CI', level: 8, color: 'bg-purple' },
-];
-
-const CELLS = 12;
+import { Image } from 'astro:assets';
 ---
 
 <section id="about" data-section="about" data-testid="about" class="px-4 py-16 sm:px-8 lg:px-16">
 	<div class="max-w-5xl">
-		<SectionHeader number="02" title="ABOUT ME" color="cyan" />
+		<SectionHeader number="02" title="ABOUT ME" />
 
 		<div class="grid gap-10 lg:grid-cols-5 lg:gap-12">
 			<!-- Bio, framed like an RPG dialogue box -->
@@ -35,58 +19,34 @@ const CELLS = 12;
 						traffic.
 					</p>
 					<p>
-						I've worked at <span class="text-cyan">Tech-House</span>,{' '}
-						<span class="text-cyan">Darwoft</span> and{' '}
-						<span class="text-cyan">StackZone</span>, mostly on high-demand sites where performance
-						is the feature — on the frontend and in the cloud alike.
+						I've worked at <span class="text-bright">Tech-House</span>,{' '}
+						<span class="text-bright">Darwoft</span> and{' '}
+						<span class="text-bright">StackZone</span>, mostly on high-demand sites where
+						performance is the feature — on the frontend and in the cloud alike.
 					</p>
 					<p>
-						I hold <span class="text-yellow">AWS CLF-C02</span>,{' '}
-						<span class="text-yellow">AWS AIF-C01</span> and{' '}
-						<span class="text-yellow">Azure AZ-900</span> certifications, which keeps me honest when designing
+						I hold <span class="text-bright">AWS CLF-C02</span>,{' '}
+						<span class="text-bright">AWS AIF-C01</span> and{' '}
+						<span class="text-bright">Azure AZ-900</span> certifications, which keeps me honest when designing
 						architectures that have to scale.
 					</p>
-				</div>
-
-				<!-- Skill meters -->
-				<div class="mt-8">
-					<p class="text-line font-display text-pixel-2xs mb-4">STATS</p>
-					<ul class="space-y-3">
-						{
-							skills.map((skill) => (
-								<li class="flex flex-wrap items-center gap-x-4 gap-y-1">
-									<span class="text-dim font-display text-pixel-2xs w-32 shrink-0">
-										{skill.name}
-									</span>
-									<span class="flex gap-1" role="img" aria-label={`${skill.level} out of ${CELLS}`}>
-										{Array.from({ length: CELLS }, (_, i) => (
-											<span
-												class={`h-3 w-2 md:w-3 ${i < skill.level ? skill.color : 'bg-panel-hi'}`}
-											/>
-										))}
-									</span>
-								</li>
-							))
-						}
-					</ul>
 				</div>
 			</div>
 
 			<!-- Avatar in a framed "cartridge label" -->
 			<div class="lg:col-span-2">
 				<figure class="mx-auto w-full max-w-72">
-					<div class="bg-panel pixel-frame frame-cyan p-2">
-						<img
-							src={avatar.src}
+					<div class="bg-panel pixel-frame frame-green p-2">
+						<Image
+							src={engineerImage}
 							alt="Jeremias Muriette"
-							width="288"
-							height="288"
+							widths={[288, 576]}
+							sizes="288px"
 							class="aspect-square w-full object-cover"
-							style="image-rendering: pixelated;"
 						/>
 					</div>
 					<figcaption
-						class="bg-cyan text-void font-display text-pixel-2xs mt-2 px-3 py-2 text-center"
+						class="bg-green text-void font-display text-pixel-2xs mt-2 px-3 py-2 text-center"
 					>
 						JEREMIAS.PNG
 					</figcaption>
