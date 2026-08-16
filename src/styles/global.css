@@ -7,25 +7,28 @@
 
 @theme {
 	/* --- Palette ---------------------------------------------------------
-	   Neutral dark surfaces carry the structure; everything that reads as
-	   text or accent comes from a single green ramp, the way a phosphor
-	   monitor only ever had one colour to work with. Hierarchy is brightness,
-	   never hue. */
-	--color-void: #10101c;
-	--color-panel: #1d1d2e;
-	--color-panel-hi: #2c2c44;
-	--color-line: #4a6b52;
+	   Everything is green; hierarchy comes from brightness, never hue. Kept
+	   deliberately small — a wide palette is what makes pixel art look fake.
 
-	/* Green ramp, brightest to dimmest. --color-green is the original accent. */
-	--color-glow: #c8ffc8;
-	--color-bright: #8dff8d;
-	--color-green: #5ce65c;
-	--color-mid: #3fb84a;
-	--color-deep: #2a7233;
+	   Surfaces, darkest to lightest. */
+	--color-shadow: #06110c; /* hard drop shadows */
+	--color-void: #071a12; /* page background */
+	--color-panel: #0d2b1e; /* cards, dialogue boxes */
+	--color-panel-hi: #123d29; /* chips, raised fills */
 
-	/* Semantic text roles, all drawn from the ramp above. */
-	--color-text: #e6ffe6;
-	--color-dim: #9fd4a5;
+	/* Accents. Lime is reserved for the one thing that must be found first
+	   on a screen — focus rings, the active nav tile, a featured marker. */
+	--color-green: #20c878; /* buttons, links, default accent */
+	--color-bright: #4ade80; /* hover and emphasis */
+	--color-lime: #a3e635; /* highlight, used sparingly */
+
+	/* Text, brightest to dimmest. All clear AA on --color-void. */
+	--color-text: #e8f5e9; /* headings                16.0:1 */
+	--color-dim: #9db8a8; /* body copy                8.5:1 */
+	--color-muted: #6e8f7d; /* tertiary labels          5.1:1 */
+
+	/* Frame chrome. Decorative only — never used for text. */
+	--color-line: #2e5c46;
 
 	/* --- Type: display face stays tiny, body face carries the reading --- */
 	--font-display: var(--font-press-start), 'Courier New', monospace;
@@ -135,7 +138,7 @@
 	   hover instead of a second cursor image — see .selectable below. */
 	body {
 		cursor:
-			url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='28' viewBox='0 0 14 14' shape-rendering='crispEdges'%3E%3Cpolygon points='0,0 0,11 3,8 5,13 8,12 6,7 10,7' fill='%2310101c'/%3E%3Cpolygon points='1,2 1,9 3,7 5,11 6,10 4,6 7,6' fill='%23e6ffe6'/%3E%3C/svg%3E")
+			url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='28' viewBox='0 0 14 14' shape-rendering='crispEdges'%3E%3Cpolygon points='0,0 0,11 3,8 5,13 8,12 6,7 10,7' fill='%2306110c'/%3E%3Cpolygon points='1,2 1,9 3,7 5,11 6,10 4,6 7,6' fill='%23e8f5e9'/%3E%3C/svg%3E")
 				0 0,
 			auto;
 	}
@@ -146,7 +149,7 @@
 	}
 
 	:focus-visible {
-		outline: 4px solid var(--color-bright);
+		outline: 4px solid var(--color-lime);
 		outline-offset: 4px;
 	}
 
@@ -194,7 +197,7 @@
 		var(--frame-width) 0 0 0 var(--frame-color),
 		0 calc(var(--frame-width) * -1) 0 0 var(--frame-color),
 		0 var(--frame-width) 0 0 var(--frame-color),
-		8px 8px 0 0 rgb(0 0 0 / 0.5);
+		8px 8px 0 0 var(--color-shadow);
 }
 
 /* Bevelled fill: light top-left, dark bottom-right. Reads as a physical key. */
@@ -204,26 +207,30 @@
 		inset -4px -4px 0 0 rgb(0 0 0 / 0.45);
 }
 
-@utility frame-bright {
-	--frame-color: var(--color-bright);
-}
 @utility frame-green {
 	--frame-color: var(--color-green);
 }
-@utility frame-mid {
-	--frame-color: var(--color-mid);
+@utility frame-bright {
+	--frame-color: var(--color-bright);
 }
+@utility frame-lime {
+	--frame-color: var(--color-lime);
+}
+@utility frame-line {
+	--frame-color: var(--color-line);
+}
+/* Alias kept because it reads better on cards than `frame-line`. */
 @utility frame-dim {
 	--frame-color: var(--color-line);
 }
 
 /* Text shadow offset by one whole pixel unit — no blur, ever. */
 @utility text-hard-shadow {
-	text-shadow: 4px 4px 0 rgb(0 0 0 / 0.6);
+	text-shadow: 4px 4px 0 var(--color-shadow);
 }
 
 @utility text-hard-shadow-sm {
-	text-shadow: 2px 2px 0 rgb(0 0 0 / 0.6);
+	text-shadow: 2px 2px 0 var(--color-shadow);
 }
 
 /* Press-down feedback. Buttons move by whole pixels, never scale. */
@@ -253,7 +260,7 @@
 		left: -1.25em;
 		top: 50%;
 		translate: 0 -50%;
-		color: var(--color-bright);
+		color: var(--color-lime);
 		opacity: 0;
 	}
 

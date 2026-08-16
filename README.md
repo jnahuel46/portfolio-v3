@@ -15,9 +15,12 @@ CSS-first theme tokens. The rules that keep the look coherent:
 
 - **4px grid.** Every border, offset and shadow is a multiple of 4. `border-radius` is
   forced to `0` globally.
-- **One hue.** Neutral dark surfaces carry the structure; every piece of text and every
-  accent comes from a single green ramp (`--color-glow` → `--color-deep`), the way a
-  phosphor monitor only ever had one colour. Hierarchy is brightness, never hue.
+- **One hue, ten colours.** Everything is green; hierarchy is brightness, never hue —
+  the way a phosphor monitor worked. Three surfaces (`shadow`/`void`/`panel`/`panel-hi`),
+  three accents (`green`/`bright`/`lime`), three text steps
+  (`text`/`dim`/`muted`, all clearing AA on the background) and one frame colour
+  (`line`). Lime is reserved for whatever must be found first on a screen: the focus
+  ring, the active nav tile, the featured marker.
 - **Photographs untouched.** The pixel styling lives in the chrome around images, not in
   the images themselves — they render at full fidelity through `astro:assets`.
 - **Two faces.** _Press Start 2P_ for display text — only ever at the small

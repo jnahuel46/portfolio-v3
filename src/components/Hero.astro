@@ -1,5 +1,6 @@
 ---
-import PixelTerminal from '@components/ui/PixelTerminal.astro';
+import engineerImage from '@assets/images/engineer.png';
+import { Image } from 'astro:assets';
 ---
 
 <section
@@ -52,11 +53,27 @@ import PixelTerminal from '@components/ui/PixelTerminal.astro';
 				</a>
 			</div>
 
-			<p class="text-line font-display text-pixel-2xs animate-blink mt-12">▼ SCROLL TO CONTINUE</p>
+			<p class="text-muted font-display text-pixel-2xs animate-blink mt-12">▼ SCROLL TO CONTINUE</p>
 		</div>
 
-		<div class="hidden lg:col-span-5 lg:block" aria-hidden="true">
-			<PixelTerminal />
+		<div class="lg:col-span-5">
+			<figure class="mx-auto w-full max-w-md">
+				<div class="bg-panel pixel-frame frame-green p-2">
+					<Image
+						src={engineerImage}
+						alt="Jeremias Muriette"
+						widths={[448, 896]}
+						sizes="(min-width: 1024px) 448px, 90vw"
+						loading="eager"
+						class="aspect-square w-full object-cover"
+					/>
+				</div>
+				<figcaption
+					class="bg-green text-void font-display text-pixel-2xs mt-2 px-3 py-2 text-center"
+				>
+					JEREMIAS.PNG
+				</figcaption>
+			</figure>
 		</div>
 	</div>
 </section>

@@ -19,7 +19,7 @@ const items = [
 					<a
 						href={`#${item.id}`}
 						data-nav={item.id}
-						class="nav-tile text-line hover:text-green flex w-10 flex-col items-center gap-1 px-1 py-2 transition-colors duration-100 md:w-16"
+						class="nav-tile text-muted hover:text-green flex w-10 flex-col items-center gap-1 px-1 py-2 transition-colors duration-100 md:w-16"
 					>
 						<span class="font-display text-pixel-xs md:text-pixel-sm">
 							{String(i + 1).padStart(2, '0')}
@@ -35,11 +35,11 @@ const items = [
 
 <style>
 	.nav-tile.active {
-		color: var(--color-bright);
+		color: var(--color-lime);
 	}
 
 	.nav-tile.active .nav-bar {
-		background: var(--color-bright);
+		background: var(--color-lime);
 		height: 0.5rem;
 	}
 </style>

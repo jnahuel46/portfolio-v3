@@ -1,7 +1,6 @@
 ---
+import PixelTerminal from '@components/ui/PixelTerminal.astro';
 import SectionHeader from '@components/ui/SectionHeader.astro';
-import engineerImage from '@assets/images/engineer.png';
-import { Image } from 'astro:assets';
 ---
 
 <section id="about" data-section="about" data-testid="about" class="px-4 py-16 sm:px-8 lg:px-16">
@@ -33,24 +32,10 @@ import { Image } from 'astro:assets';
 				</div>
 			</div>
 
-			<!-- Avatar in a framed "cartridge label" -->
-			<div class="lg:col-span-2">
-				<figure class="mx-auto w-full max-w-72">
-					<div class="bg-panel pixel-frame frame-green p-2">
-						<Image
-							src={engineerImage}
-							alt="Jeremias Muriette"
-							widths={[288, 576]}
-							sizes="288px"
-							class="aspect-square w-full object-cover"
-						/>
-					</div>
-					<figcaption
-						class="bg-green text-void font-display text-pixel-2xs mt-2 px-3 py-2 text-center"
-					>
-						JEREMIAS.PNG
-					</figcaption>
-				</figure>
+			<!-- Decorative CRT. The portrait leads the page up in the hero, so this
+			     column carries the illustration instead. -->
+			<div class="hidden lg:col-span-2 lg:flex lg:items-center" aria-hidden="true">
+				<PixelTerminal />
 			</div>
 		</div>
 	</div>

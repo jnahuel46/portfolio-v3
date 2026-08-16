@@ -85,7 +85,7 @@ const others = sorted.slice(3, 11);
 											class="aspect-video w-full object-cover"
 										/>
 									) : (
-										<div class="bg-panel-hi text-line font-display text-pixel-2xs flex aspect-video w-full items-center justify-center">
+										<div class="bg-panel-hi text-muted font-display text-pixel-2xs flex aspect-video w-full items-center justify-center">
 											NO SIGNAL
 										</div>
 									)}
@@ -93,7 +93,7 @@ const others = sorted.slice(3, 11);
 							</div>
 
 							<div class={`lg:col-span-5 ${flipped ? 'lg:order-1' : ''}`}>
-								<p class="text-green font-display text-pixel-2xs mb-3">★ FEATURED ITEM</p>
+								<p class="text-lime font-display text-pixel-2xs mb-3">★ FEATURED ITEM</p>
 								<h3 class="text-pixel-xs sm:text-pixel-sm mb-4 leading-relaxed">
 									<a
 										href={project.data.link}
@@ -163,7 +163,7 @@ const others = sorted.slice(3, 11);
 									href={project.data.goToRepo}
 									target="_blank"
 									rel="noopener noreferrer"
-									class="text-line hover:text-green font-display text-pixel-2xs transition-colors duration-100"
+									class="text-muted hover:text-green font-display text-pixel-2xs transition-colors duration-100"
 								>
 									SRC
 								</a>
@@ -171,7 +171,7 @@ const others = sorted.slice(3, 11);
 									href={project.data.link}
 									target="_blank"
 									rel="noopener noreferrer"
-									class="text-line hover:text-green font-display text-pixel-2xs transition-colors duration-100"
+									class="text-muted hover:text-green font-display text-pixel-2xs transition-colors duration-100"
 								>
 									RUN
 								</a>
@@ -183,7 +183,7 @@ const others = sorted.slice(3, 11);
 
 						<ul class="flex flex-wrap gap-1">
 							{project.data.tags.slice(0, 4).map((tag) => (
-								<li class="text-line font-display text-pixel-2xs">{tag}</li>
+								<li class="text-muted font-display text-pixel-2xs">{tag}</li>
 							))}
 						</ul>
 					</article>
