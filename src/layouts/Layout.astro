@@ -3,6 +3,7 @@ import Footer from '@components/Footer.astro';
 import Sidebar from '@components/Sidebar.astro';
 import Starfield from '@components/Starfield.astro';
 import StatusBar from '@components/StatusBar.astro';
+import Analytics from '@vercel/analytics/astro';
 import { Font } from 'astro:assets';
 import { SEO } from 'astro-seo';
 import '../styles/global.css';
@@ -64,5 +65,7 @@ const description =
 		</div>
 
 		<div class="crt-overlay" aria-hidden="true"></div>
+
+		<Analytics />
 	</body>
 </html>
