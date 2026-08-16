@@ -1,109 +1,108 @@
-# Portfolio Website
+# Portfolio — v3 (8-bit)
 
-💫 This portfolio is based on a free template by [Veranika Kasparevych](https://github.com/veranikabarel) using **[Astro 2.0](https://astro.build/blog/astro-2/) + [Tailwind CSS](https://tailwindcss.com/)**, with several modifications and improvements by [Jeremias Muriette](https://github.com/jnahuel46).
+Personal portfolio of [Jeremias Muriette](https://github.com/jnahuel46), rebuilt as an
+8-bit / arcade-styled single page with **[Astro 7](https://astro.build/)** and
+**[Tailwind CSS 4](https://tailwindcss.com/)**.
 
-## Modifications and Improvements
+Originally based on a free template by
+[Veranika Kasparevych](https://github.com/veranikabarel); v3 keeps the content model and
+replaces the presentation layer entirely.
 
-- Added smooth fade-in animations for better user experience
-- Redesigned the hero section with sequential animations
-- Enhanced the about section with a new two-column layout
-- Improved responsive design and accessibility
-- Added new interactive elements and transitions
-- Customized the color scheme and typography
+## The 8-bit design system
 
-## Table of Contents
+Everything lives in [`src/styles/global.css`](src/styles/global.css), as Tailwind 4
+CSS-first theme tokens. The rules that keep the look coherent:
 
-- [Demo](#demo)
-- [Features](#features)
-- [Project structure](#project-structure)
-- [Commands](#commands)
-- [Contributing](#contributing)
-- [Credits](#credits)
+- **4px grid.** Every border, offset and shadow is a multiple of 4. `border-radius` is
+  forced to `0` globally.
+- **Limited palette.** A NES-ish set of six accents over three background shades. No
+  gradients other than the CRT overlay.
+- **Two faces.** _Press Start 2P_ for display text — only ever at the small
+  `--text-pixel-*` sizes — and _VT323_ for body copy, which stays readable in
+  paragraphs. Both are self-hosted at build time by Astro's font pipeline, so the page
+  makes no third-party requests.
+- **Stepped motion.** Transitions use `steps()`, never easing curves. Hover states move
+  elements by whole pixels rather than scaling them.
+- **Font smoothing off.** Anti-aliasing turns pixel faces to mush.
 
-## Features
+### Pixel primitives
 
-✔️ Integration with **Tailwind CSS** ([@astrojs/tailwind](https://docs.astro.build/en/guides/integrations-guide/tailwind/)) supporting **Dark mode**.
+Custom Tailwind utilities that do the visual heavy lifting:
 
-✔️ Uses the following integrations:
+| Utility              | What it does                                                        |
+| :------------------- | :------------------------------------------------------------------ |
+| `pixel-frame`        | Border drawn from four offset shadows, leaving notched corners       |
+| `pixel-frame-raised` | Same, plus a hard drop shadow                                        |
+| `pixel-bevel`        | Inset light/dark bevel — reads as a physical key                     |
+| `pixel-press`        | Whole-pixel hover lift and press-down                                |
+| `frame-*`            | Recolours the frame (`frame-cyan`, `frame-yellow`, …)                |
+| `text-hard-shadow`   | Offset text shadow with no blur                                      |
+| `selectable`         | Blinking ▶ menu selector on hover/focus                              |
+| `crt-overlay`        | Fixed scanlines + vignette over the whole page                       |
 
-- @astrojs/mdx
-- @astrojs/image
-- @astrojs/tailwind - with prettier class sorting plugin
-- @astro-icon
-- @astro-seo
-- @astro-navbar
+### Photographs
 
-✔️([@Playwright](https://github.com/microsoft/playwright)) e2e tests are setted up.
+Real screenshots fight pixel art. Both [`About.astro`](src/components/About.astro) and
+[`Projects.astro`](src/components/Projects.astro) run their images through `getImage()`
+at a tiny width (72px and 160px), then scale them back up with
+`image-rendering: pixelated`. The result is genuine pixelation rather than a CSS filter —
+and it dropped total image weight from ~10MB to ~150KB.
 
-🔜 Blog with frontmatter (title, description, author, date, image, tags) and RSS feed, sitemap and robots.txt
+## Accessibility
 
-🔜 404 error page
+The arcade styling is deliberately not allowed to cost usability:
 
-## Project Structure
+- `prefers-reduced-motion` disables the blinking, flicker and scanline animation.
+- The stage-select tabs are a real ARIA tablist with arrow-key navigation.
+- A skip link is the first tab stop; focus rings are 4px and high-contrast.
+- The custom pixel cursor is paired with the `selectable` ▶ marker so click affordance
+  never depends on the cursor image alone.
 
-Inside of your Astro project, you'll see the following folders and files:
+## Project structure
 
 ```
-/
 ├── public/
-│   └── favicon.ico
-|   ├── hero.png
-|   └── ...
+│   ├── favicon.svg
+│   └── jere-muriette-se.pdf
 ├── src/
-|   ├── assets/
-|   |   ├── images/
-│   │   |   ├── hero.png
-|   |   |   └── ...
+│   ├── assets/images/
 │   ├── components/
-│   │   ├── ui/
-│   │   |   ├── BackToTop.astro
-|   |   |   └── ...
-│   │   ├── About.astro
-│   │   ├── Contact.astro
-|   |   └── ...
-│   ├── content/
-│   │   ├── projects/
-│   │   │   ├── project-1.md
-│   │   │   ├── project-1.md
-│   │   │   └── ...
-│   │   └-- config.ts
-│   ├── layouts/
-│   │   ├── Layout.astro
-│   ├── pages/
-│   │   ├── index.astro
-│   ├── tests/
-│   │   ├── index.spec.ts
-├── package.json
+│   │   ├── ui/            SectionHeader, BackToTop, PixelTerminal
+│   │   ├── StatusBar.astro   arcade HUD, top
+│   │   ├── Sidebar.astro     section nav, left
+│   │   └── Hero / About / Experience / Projects / Contact / Footer
+│   ├── content/projects/  one markdown file per project
+│   ├── content.config.ts  collection schema (glob loader)
+│   ├── layouts/Layout.astro
+│   ├── pages/index.astro
+│   └── styles/global.css  the design system
+├── tests/index.spec.ts
 ├── astro.config.mjs
-└── ...
+└── playwright.config.ts
 ```
 
-Astro looks for `.astro`, `.md` or `.mdx` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
-
-`src/components/` is where we put any Astro components and similarly `src/layouts/` for layouts.
-
-Images can be placed in `src/images/`.
-
-Blog and documentation content are created as collections of Markdown or MDX files in `src/content`.
-
-Any static assets, eg. images, can be placed in the `public/` directory.
+Adding a project means dropping a markdown file into `src/content/projects/` matching the
+schema in [`content.config.ts`](src/content.config.ts). To give it a thumbnail, add the
+image to `src/assets/images/` and register it in the `sources` map in `Projects.astro`,
+keyed by the file's `img_alt`.
 
 ## Commands
 
-All commands are run from the root of the project, from a terminal:
+| Command           | Action                                          |
+| :---------------- | :---------------------------------------------- |
+| `npm install`     | Install dependencies                            |
+| `npm run dev`     | Dev server at `localhost:4321`                  |
+| `npm run build`   | Build to `./dist/`                              |
+| `npm run preview` | Preview the build locally                       |
+| `npm run check`   | Type-check `.astro` and `.ts` files             |
+| `npm test`        | Playwright e2e tests (builds and serves first)  |
 
-| Command             | Action                                             |
-| :------------------ | :------------------------------------------------- |
-| `yarn`              | Installs dependencies                              |
-| `yarn dev`          | Starts local dev server at `localhost:3000`        |
-| `yarn build`        | Build your production site to `./dist/`            |
-| `yarn preview`      | Preview your build locally, before deploying       |
-| `yarn astro ...`    | Run CLI commands like `astro add`, `astro preview` |
-| `yarn astro --help` | Get help using the Astro CLI                       |
-| `yarn test:e2e`     | Run Playwright tests                               |
+> Note: `astro dev` and `astro preview` daemonise when they have no TTY. Use
+> `astro dev stop` / `astro preview status` to manage them. The Playwright config uses
+> `vite preview` instead, since it stays in the foreground.
 
 ## Credits
 
-Original template by [Veranika Kasparevych](https://github.com/veranikabarel)
-Modified and enhanced by [Jeremias Muriette](https://github.com/jnahuel46)
-Assets designed by [Freepik](https://www.freepik.com)
+Original template by [Veranika Kasparevych](https://github.com/veranikabarel).
+Layout lineage from [Brittany Chiang](https://brittanychiang.com).
+Assets designed by [Freepik](https://www.freepik.com).

@@ -1,0 +1,75 @@
+---
+// Arcade HUD pinned to the top of the viewport: player name on the left,
+// a typewritten role on the right. Mirrors a cabinet's "1UP / HI-SCORE" row.
+const roles = ['SENIOR SOFTWARE ENGINEER', 'REACT + NEXT.JS', 'TYPESCRIPT / NODE', 'AWS CERTIFIED'];
+---
+
+<header
+	data-testid="header"
+	class="bg-void border-line fixed top-0 right-0 left-0 z-50 flex h-14 items-center justify-between border-b-4 px-3 md:h-16 md:px-6"
+>
+	<div class="flex items-baseline gap-2 md:gap-4">
+		<span class="text-red font-display text-pixel-2xs md:text-pixel-xs animate-blink">1UP</span>
+		<span class="text-text font-display text-pixel-2xs md:text-pixel-sm text-hard-shadow-sm">
+			JEREMIAS MURIETTE
+		</span>
+	</div>
+
+	<div class="hidden items-baseline gap-3 sm:flex">
+		<span class="text-line font-display text-pixel-2xs">JOB</span>
+		<span
+			id="role-ticker"
+			class="text-cyan font-display text-pixel-2xs md:text-pixel-xs"
+			data-roles={JSON.stringify(roles)}
+		>
+			{roles[0]}
+		</span>
+		<span class="bg-cyan animate-blink inline-block h-3 w-2 md:h-4"></span>
+	</div>
+</header>
+
+<script>
+	// Types a role out, holds, deletes, moves to the next. Steps only — no easing.
+	function initRoleTicker() {
+		const el = document.getElementById('role-ticker');
+		if (!el) return;
+
+		const roles: string[] = JSON.parse(el.dataset.roles ?? '[]');
+		if (roles.length === 0) return;
+
+		// Honour reduced-motion by leaving the first role on screen, static.
+		if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+		const TYPE_MS = 70;
+		const DELETE_MS = 35;
+		const HOLD_MS = 2200;
+
+		let roleIndex = 0;
+		let charIndex = roles[0].length;
+		let deleting = false;
+
+		function tick() {
+			const role = roles[roleIndex];
+			charIndex += deleting ? -1 : 1;
+			el!.textContent = role.slice(0, charIndex);
+
+			if (!deleting && charIndex === role.length) {
+				deleting = true;
+				setTimeout(tick, HOLD_MS);
+				return;
+			}
+
+			if (deleting && charIndex === 0) {
+				deleting = false;
+				roleIndex = (roleIndex + 1) % roles.length;
+			}
+
+			setTimeout(tick, deleting ? DELETE_MS : TYPE_MS);
+		}
+
+		setTimeout(tick, HOLD_MS);
+	}
+
+	initRoleTicker();
+	document.addEventListener('astro:page-load', initRoleTicker);
+</script>

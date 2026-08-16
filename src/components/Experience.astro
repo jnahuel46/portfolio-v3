@@ -1,273 +1,189 @@
 ---
+import SectionHeader from '@components/ui/SectionHeader.astro';
+
+const jobs = [
+	{
+		id: 'tech-house',
+		tab: 'TECH-HOUSE',
+		role: 'Senior Software Engineer',
+		company: 'Tech-House',
+		period: 'NOV 2024 — PRESENT',
+		bullets: [
+			'Specialise in Next.js, NestJS, Node.js, TypeScript, React, ShadCN, Tailwind, tRPC and React Query.',
+			'Build scalable, high-performance applications on modern frontend architectures.',
+			'Ship to AWS with ArgoCD and Helm, keeping CI/CD workflows smooth.',
+			'Work in agile teams, coordinating through Jira.',
+			'Led a company MVP from scratch while maintaining and extending a large-scale e-commerce platform.',
+		],
+		tags: ['React', 'Next.js', 'TypeScript', 'NestJS', 'AWS', 'tRPC'],
+	},
+	{
+		id: 'darwoft',
+		tab: 'DARWOFT',
+		role: 'Tech Lead',
+		company: 'Darwoft',
+		period: 'SEP 2024 — DEC 2024 · REMOTE, CÓRDOBA',
+		bullets: [
+			'Technical lead for a full-stack project: technical decisions, architecture and best practices.',
+			'Drove end-to-end development in React, Next.js and Java, keeping solutions maintainable and aligned with business goals.',
+			'Managed AWS infrastructure and Jenkins CI/CD pipelines for reliable automated deploys.',
+			'Set the testing standard for the team with Jest and Cypress.',
+		],
+		tags: ['React', 'Next.js', 'Java', 'AWS', 'Jenkins', 'Jest', 'Cypress'],
+	},
+	{
+		id: 'stackzone',
+		tab: 'STACKZONE',
+		role: 'Software Engineer — Frontend Lead',
+		company: 'StackZone LTD',
+		period: 'NOV 2021 — NOV 2024',
+		bullets: [
+			'Served as Frontend Leader from November 2023 onward.',
+			'Built frontend and backend with React, TypeScript, Vite, Node.js, Prisma and AWS SAM.',
+			'Led the frontend team and mentored new joiners through their ramp-up.',
+			'Ran AWS services across S3, Lambda, API Gateway, EC2 and ECS for scale and reliability.',
+			'Used Docker, Redis, PgAdmin and Figma to keep delivery efficient.',
+		],
+		tags: ['React', 'TypeScript', 'Node.js', 'AWS', 'Prisma', 'Docker'],
+	},
+	{
+		id: 'education',
+		tab: 'SCHOOL',
+		role: 'Education & Certifications',
+		company: 'Multiple Institutions',
+		period: '2018 — PRESENT',
+		bullets: [
+			'Higher Technical Institute TECLAB — Higher Technique in Programming (ongoing).',
+			'AWS Cloud Practitioner (CLF-C02) and AI Practitioner (AIF-C01) — December 2023.',
+			'Microsoft Azure Fundamentals (AZ-900) — December 2024.',
+			'National Technical University (UTNFRC) — Full Stack Web Programming Level 1, December 2021.',
+		],
+		tags: ['AWS', 'Azure', 'JavaScript', 'PHP', 'MySQL', 'Java'],
+	},
+];
 ---
 
 <section
-  id="experience"
-  data-section="experience"
-  class="min-h-screen flex items-center px-8 lg:px-16 xl:px-24 py-10"
+	id="experience"
+	data-section="experience"
+	data-testid="experience"
+	class="px-4 py-16 sm:px-8 lg:px-16"
 >
-  <div class="max-w-6xl w-full">
-    <!-- Section header -->
-    <div class="flex items-center mb-10 lg:mb-16">
-      <h2 class="text-text-primary font-sans font-bold text-2xl md:text-3xl lg:text-4xl mr-4">
-        <span class="text-accent font-monospace text-base md:text-lg font-normal">02.</span>
-        Where I've Worked
-      </h2>
-      <div class="flex-1 h-px bg-text-muted ml-6 max-w-xs"></div>
-    </div>
+	<div class="max-w-5xl">
+		<SectionHeader number="03" title="STAGE SELECT" color="magenta" />
 
-    <div class="flex flex-col lg:flex-row gap-8">
-      <!-- Tab buttons (left side on desktop, top on mobile) -->
-      <div class="lg:min-w-max">
-        <div class="flex lg:flex-col overflow-x-auto lg:overflow-visible">
-          <button 
-            class="experience-tab whitespace-nowrap px-6 py-3 text-left border-l-2 lg:border-l-2 lg:border-b-0 border-b-2 border-text-muted text-text-secondary hover:text-accent hover:border-accent hover:bg-dark-secondary transition-all duration-300 font-monospace text-sm active"
-            data-tab="tech-house"
-          >
-            Tech-House
-          </button>
-          <button
-            class="experience-tab whitespace-nowrap px-6 py-3 text-left border-l-2 lg:border-l-2 lg:border-b-0 border-b-2 border-text-muted text-text-secondary hover:text-accent hover:border-accent hover:bg-dark-secondary transition-all duration-300 font-monospace text-sm"
-            data-tab="darwoft"
-          >
-            Darwoft
-          </button>
-          <button
-            class="experience-tab whitespace-nowrap px-6 py-3 text-left border-l-2 lg:border-l-2 lg:border-b-0 border-b-2 border-text-muted text-text-secondary hover:text-accent hover:border-accent hover:bg-dark-secondary transition-all duration-300 font-monospace text-sm"
-            data-tab="stackzone"
-          >
-            StackZone
-          </button>
-          <button
-            class="experience-tab whitespace-nowrap px-6 py-3 text-left border-l-2 lg:border-l-2 lg:border-b-0 border-b-2 border-text-muted text-text-secondary hover:text-accent hover:border-accent hover:bg-dark-secondary transition-all duration-300 font-monospace text-sm"
-            data-tab="education"
-          >
-            Education
-          </button>
-        </div>
-      </div>
+		<div class="flex flex-col gap-6 lg:flex-row lg:gap-10">
+			<!-- Cartridge slots -->
+			<div
+				role="tablist"
+				aria-label="Work history"
+				aria-orientation="vertical"
+				class="flex shrink-0 overflow-x-auto lg:flex-col lg:overflow-visible"
+			>
+				{
+					jobs.map((job, i) => (
+						<button
+							type="button"
+							role="tab"
+							id={`tab-${job.id}`}
+							aria-controls={`panel-${job.id}`}
+							aria-selected={i === 0 ? 'true' : 'false'}
+							tabindex={i === 0 ? 0 : -1}
+							data-tab={job.id}
+							class="stage-tab text-dim hover:text-magenta font-display text-pixel-2xs hover:bg-panel shrink-0 px-4 py-4 text-left whitespace-nowrap transition-colors duration-100 lg:w-40"
+						>
+							{job.tab}
+						</button>
+					))
+				}
+			</div>
 
-      <!-- Tab content (right side) -->
-      <div class="flex-1 min-h-[400px]">
-        <!-- Tech-House experience -->
-        <div id="tech-house" class="experience-content active">
-          <div class="mb-2">
-            <h3 class="text-text-primary text-xl lg:text-2xl font-semibold">
-              Senior Software Engineer 
-              <span class="text-accent">@ Tech-House</span>
-            </h3>
-            <p class="text-text-muted font-monospace text-sm">November 2024 - Present</p>
-          </div>
-          
-          <div class="mt-6 space-y-4 text-text-secondary leading-relaxed">
-            <div class="flex items-start">
-              <span class="text-accent mr-3 mt-2 flex-shrink-0">▹</span>
-              <p>Senior Software Engineer specializing in Next.js, NestJs, NodeJs, TypeScript, React, ShadCN, Tailwind, tRPC, and React Query</p>
-            </div>
-            <div class="flex items-start">
-              <span class="text-accent mr-3 mt-2 flex-shrink-0">▹</span>
-              <p>Experienced in building scalable, high-performance applications with modern frontend architectures</p>
-            </div>
-            <div class="flex items-start">
-              <span class="text-accent mr-3 mt-2 flex-shrink-0">▹</span>
-              <p>Proficient in AWS deployments using ArgoCD and Helm, ensuring smooth CI/CD workflows</p>
-            </div>
-            <div class="flex items-start">
-              <span class="text-accent mr-3 mt-2 flex-shrink-0">▹</span>
-              <p>Strong background in agile methodologies, utilizing tools like Jira for efficient collaboration</p>
-            </div>
-            <div class="flex items-start">
-              <span class="text-accent mr-3 mt-2 flex-shrink-0">▹</span>
-              <p>Led the initiative and development of a company MVP from scratch, while also contributing to the maintenance and implementation of new features in a large-scale e-commerce platform</p>
-            </div>
-          </div>
+			<!-- Stage details -->
+			<div class="min-w-0 flex-1">
+				{
+					jobs.map((job, i) => (
+						<div
+							role="tabpanel"
+							id={`panel-${job.id}`}
+							aria-labelledby={`tab-${job.id}`}
+							hidden={i !== 0}
+							class="stage-panel bg-panel pixel-frame frame-dim p-6"
+						>
+							<h3 class="text-text text-pixel-xs sm:text-pixel-sm mb-2 leading-relaxed">
+								{job.role}
+								<span class="text-magenta block sm:inline"> @ {job.company}</span>
+							</h3>
+							<p class="text-line font-display text-pixel-2xs mb-6">{job.period}</p>
 
-          <div class="mt-6">
-            <div class="flex flex-wrap gap-2">
-              <span class="px-3 py-1 text-xs font-monospace bg-dark-secondary text-accent border border-accent rounded">React</span>
-              <span class="px-3 py-1 text-xs font-monospace bg-dark-secondary text-accent border border-accent rounded">Next.js</span>
-              <span class="px-3 py-1 text-xs font-monospace bg-dark-secondary text-accent border border-accent rounded">TypeScript</span>
-              <span class="px-3 py-1 text-xs font-monospace bg-dark-secondary text-accent border border-accent rounded">NestJS</span>
-              <span class="px-3 py-1 text-xs font-monospace bg-dark-secondary text-accent border border-accent rounded">AWS</span>
-              <span class="px-3 py-1 text-xs font-monospace bg-dark-secondary text-accent border border-accent rounded">tRPC</span>
-            </div>
-          </div>
-        </div>
+							<ul class="mb-6 space-y-3">
+								{job.bullets.map((bullet) => (
+									<li class="flex gap-3">
+										<span class="text-yellow shrink-0" aria-hidden="true">
+											▸
+										</span>
+										<span class="text-dim">{bullet}</span>
+									</li>
+								))}
+							</ul>
 
-        <!-- Darwoft experience -->
-        <div id="darwoft" class="experience-content">
-          <div class="mb-2">
-            <h3 class="text-text-primary text-xl lg:text-2xl font-semibold">
-              Tech Lead
-              <span class="text-accent">@ Darwoft</span>
-            </h3>
-            <p class="text-text-muted font-monospace text-sm">September 2024 - December 2024 · Remote, Córdoba</p>
-          </div>
-
-          <div class="mt-6 space-y-4 text-text-secondary leading-relaxed">
-            <div class="flex items-start">
-              <span class="text-accent mr-3 mt-2 flex-shrink-0">▹</span>
-              <p>Technical Lead responsible for the implementation and delivery of a full-stack project, defining technical decisions, architecture, and best practices</p>
-            </div>
-            <div class="flex items-start">
-              <span class="text-accent mr-3 mt-2 flex-shrink-0">▹</span>
-              <p>Led end-to-end development using React, Next.js, and Java, ensuring scalable and maintainable solutions aligned with business goals</p>
-            </div>
-            <div class="flex items-start">
-              <span class="text-accent mr-3 mt-2 flex-shrink-0">▹</span>
-              <p>Managed AWS cloud infrastructure and CI/CD pipelines with Jenkins to ensure reliable and automated deployments</p>
-            </div>
-            <div class="flex items-start">
-              <span class="text-accent mr-3 mt-2 flex-shrink-0">▹</span>
-              <p>Ensured code quality through automated testing with Jest and Cypress, establishing testing standards for the team</p>
-            </div>
-          </div>
-
-          <div class="mt-6">
-            <div class="flex flex-wrap gap-2">
-              <span class="px-3 py-1 text-xs font-monospace bg-dark-secondary text-accent border border-accent rounded">React</span>
-              <span class="px-3 py-1 text-xs font-monospace bg-dark-secondary text-accent border border-accent rounded">Next.js</span>
-              <span class="px-3 py-1 text-xs font-monospace bg-dark-secondary text-accent border border-accent rounded">Java</span>
-              <span class="px-3 py-1 text-xs font-monospace bg-dark-secondary text-accent border border-accent rounded">AWS</span>
-              <span class="px-3 py-1 text-xs font-monospace bg-dark-secondary text-accent border border-accent rounded">Jenkins</span>
-              <span class="px-3 py-1 text-xs font-monospace bg-dark-secondary text-accent border border-accent rounded">Jest</span>
-              <span class="px-3 py-1 text-xs font-monospace bg-dark-secondary text-accent border border-accent rounded">Cypress</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- StackZone experience -->
-        <div id="stackzone" class="experience-content">
-          <div class="mb-2">
-            <h3 class="text-text-primary text-xl lg:text-2xl font-semibold">
-              Software Engineer - Frontend Lead 
-              <span class="text-accent">@ StackZone LTD</span>
-            </h3>
-            <p class="text-text-muted font-monospace text-sm">November 2021 - November 2024</p>
-          </div>
-          
-          <div class="mt-6 space-y-4 text-text-secondary leading-relaxed">
-            <div class="flex items-start">
-              <span class="text-accent mr-3 mt-2 flex-shrink-0">▹</span>
-              <p>From November 2023 to December 2024 served as Frontend Leader</p>
-            </div>
-            <div class="flex items-start">
-              <span class="text-accent mr-3 mt-2 flex-shrink-0">▹</span>
-              <p>Developed both frontend and backend solutions using React, TypeScript, Vite, Node.js, Prisma and AWS Serverless Application Model</p>
-            </div>
-            <div class="flex items-start">
-              <span class="text-accent mr-3 mt-2 flex-shrink-0">▹</span>
-              <p>Led Frontend team and mentored new team members, fostering their growth and integration into the team</p>
-            </div>
-            <div class="flex items-start">
-              <span class="text-accent mr-3 mt-2 flex-shrink-0">▹</span>
-              <p>Managed AWS cloud services including S3, Lambda, API Gateway, EC2, ECS, leveraging cloud infrastructure to ensure scalability and reliability</p>
-            </div>
-            <div class="flex items-start">
-              <span class="text-accent mr-3 mt-2 flex-shrink-0">▹</span>
-              <p>Utilized Docker, Redis, PgAdmin, and Figma to streamline development processes, ensuring efficiency and quality in project management</p>
-            </div>
-          </div>
-
-          <div class="mt-6">
-            <div class="flex flex-wrap gap-2">
-              <span class="px-3 py-1 text-xs font-monospace bg-dark-secondary text-accent border border-accent rounded">React</span>
-              <span class="px-3 py-1 text-xs font-monospace bg-dark-secondary text-accent border border-accent rounded">TypeScript</span>
-              <span class="px-3 py-1 text-xs font-monospace bg-dark-secondary text-accent border border-accent rounded">Node.js</span>
-              <span class="px-3 py-1 text-xs font-monospace bg-dark-secondary text-accent border border-accent rounded">AWS</span>
-              <span class="px-3 py-1 text-xs font-monospace bg-dark-secondary text-accent border border-accent rounded">Prisma</span>
-              <span class="px-3 py-1 text-xs font-monospace bg-dark-secondary text-accent border border-accent rounded">Docker</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Education -->
-        <div id="education" class="experience-content">
-          <div class="mb-2">
-            <h3 class="text-text-primary text-xl lg:text-2xl font-semibold">
-              Education & Certifications 
-              <span class="text-accent">@ Multiple Institutions</span>
-            </h3>
-            <p class="text-text-muted font-monospace text-sm">2018 - Present</p>
-          </div>
-          
-          <div class="mt-6 space-y-4 text-text-secondary leading-relaxed">
-            <div class="flex items-start">
-              <span class="text-accent mr-3 mt-2 flex-shrink-0">▹</span>
-              <p><strong>Higher Technical Institute - TECLAB:</strong> Higher Technique in Programming (Ongoing)</p>
-            </div>
-            <div class="flex items-start">
-              <span class="text-accent mr-3 mt-2 flex-shrink-0">▹</span>
-              <p><strong>AWS Certifications:</strong> Cloud Practitioner (CLF-C02) & AI Practitioner (AIF-C01) - December 2023</p>
-            </div>
-            <div class="flex items-start">
-              <span class="text-accent mr-3 mt-2 flex-shrink-0">▹</span>
-              <p><strong>Microsoft Azure:</strong> Azure Fundamentals (AZ-900) - December 2024</p>
-            </div>
-            <div class="flex items-start">
-              <span class="text-accent mr-3 mt-2 flex-shrink-0">▹</span>
-              <p><strong>National Technical University (UTNFRC):</strong> Full Stack Web Programming Level 1 - December 2021</p>
-            </div>
-          </div>
-
-          <div class="mt-6">
-            <div class="flex flex-wrap gap-2">
-              <span class="px-3 py-1 text-xs font-monospace bg-dark-secondary text-accent border border-accent rounded">AWS</span>
-              <span class="px-3 py-1 text-xs font-monospace bg-dark-secondary text-accent border border-accent rounded">Azure</span>
-              <span class="px-3 py-1 text-xs font-monospace bg-dark-secondary text-accent border border-accent rounded">JavaScript</span>
-              <span class="px-3 py-1 text-xs font-monospace bg-dark-secondary text-accent border border-accent rounded">PHP</span>
-              <span class="px-3 py-1 text-xs font-monospace bg-dark-secondary text-accent border border-accent rounded">MySQL</span>
-              <span class="px-3 py-1 text-xs font-monospace bg-dark-secondary text-accent border border-accent rounded">Java</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
+							<ul class="flex flex-wrap gap-2">
+								{job.tags.map((tag) => (
+									<li class="bg-panel-hi text-magenta font-display text-pixel-2xs px-2 py-2">
+										{tag}
+									</li>
+								))}
+							</ul>
+						</div>
+					))
+				}
+			</div>
+		</div>
+	</div>
 </section>
 
 <style>
-  .experience-tab.active {
-    @apply text-accent border-accent bg-dark-secondary;
-  }
-  
-  .experience-content {
-    @apply hidden;
-  }
-  
-  .experience-content.active {
-    @apply block;
-  }
+	.stage-tab[aria-selected='true'] {
+		background: var(--color-magenta);
+		color: var(--color-void);
+	}
 </style>
 
 <script>
-  function initExperienceTabs() {
-    const tabs = document.querySelectorAll('.experience-tab');
-    const contents = document.querySelectorAll('.experience-content');
-    
-    tabs.forEach(tab => {
-      tab.addEventListener('click', () => {
-        const targetTab = tab.getAttribute('data-tab');
+	function initStageSelect() {
+		const tabs = Array.from(document.querySelectorAll<HTMLButtonElement>('.stage-tab'));
+		const panels = Array.from(document.querySelectorAll<HTMLElement>('.stage-panel'));
+		if (tabs.length === 0) return;
 
-        if (targetTab) {
-          // Remove active class from all tabs and contents
-          tabs.forEach(t => t.classList.remove('active'));
-          contents.forEach(c => c.classList.remove('active'));
+		function select(index: number, focus = true) {
+			tabs.forEach((tab, i) => {
+				const selected = i === index;
+				tab.setAttribute('aria-selected', String(selected));
+				tab.tabIndex = selected ? 0 : -1;
+				panels[i].hidden = !selected;
+			});
+			if (focus) tabs[index].focus();
+		}
 
-          // Add active class to clicked tab and corresponding content
-          tab.classList.add('active');
-          const targetContent = document.getElementById(targetTab);
-          if (targetContent) {
-            targetContent.classList.add('active');
-          }
-        }
-      });
-    });
-  }
-  
-  // Initialize when DOM is loaded
-  document.addEventListener('DOMContentLoaded', initExperienceTabs);
-  
-  // Re-initialize for Astro page navigation
-  document.addEventListener('astro:page-load', initExperienceTabs);
+		tabs.forEach((tab, i) => {
+			tab.addEventListener('click', () => select(i, false));
+
+			tab.addEventListener('keydown', (event) => {
+				const keys: Record<string, number> = {
+					ArrowRight: i + 1,
+					ArrowDown: i + 1,
+					ArrowLeft: i - 1,
+					ArrowUp: i - 1,
+					Home: 0,
+					End: tabs.length - 1,
+				};
+				const next = keys[event.key];
+				if (next === undefined) return;
+				event.preventDefault();
+				select((next + tabs.length) % tabs.length);
+			});
+		});
+	}
+
+	initStageSelect();
+	document.addEventListener('astro:page-load', initStageSelect);
 </script>

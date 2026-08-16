@@ -1,90 +1,97 @@
 ---
-import engineerImage from '../assets/images/engineer.png';
+import SectionHeader from '@components/ui/SectionHeader.astro';
+import engineerImage from '@assets/images/engineer.png';
+import { getImage } from 'astro:assets';
+
+// Downscale hard, then let CSS blow it back up with `image-rendering: pixelated`.
+// 72px source shown at ~288px is a clean 4x — real pixels, not a blur filter.
+const avatar = await getImage({ src: engineerImage, width: 72, format: 'png' });
+
+// Self-reported proficiency out of 12 cells. Tweak to taste.
+const skills = [
+	{ name: 'TYPESCRIPT', level: 11, color: 'bg-cyan' },
+	{ name: 'REACT / NEXT', level: 12, color: 'bg-cyan' },
+	{ name: 'NODE / NESTJS', level: 9, color: 'bg-green' },
+	{ name: 'AWS / AZURE', level: 9, color: 'bg-yellow' },
+	{ name: 'POSTGRES', level: 8, color: 'bg-magenta' },
+	{ name: 'DOCKER / CI', level: 8, color: 'bg-purple' },
+];
+
+const CELLS = 12;
 ---
 
-<section
-  id="about"
-  data-section="about"
-  data-testid="about"
-  class="min-h-[88vh] flex items-center px-8 lg:px-16 xl:px-24 py-10"
->
-  <div class="max-w-6xl w-full">
-    <!-- Section header -->
-    <div class="flex items-center mb-10 lg:mb-16">
-      <h2 class="text-text-primary font-sans font-bold text-2xl md:text-3xl lg:text-4xl mr-4">
-        <span class="text-accent font-monospace text-base md:text-lg font-normal">01.</span>
-        About Me
-      </h2>
-      <div class="flex-1 h-px bg-text-muted ml-6 max-w-xs"></div>
-    </div>
+<section id="about" data-section="about" data-testid="about" class="px-4 py-16 sm:px-8 lg:px-16">
+	<div class="max-w-5xl">
+		<SectionHeader number="02" title="ABOUT ME" color="cyan" />
 
-    <div class="grid lg:grid-cols-3 gap-12 lg:gap-16">
-      <!-- Main content -->
-      <div class="lg:col-span-2 space-y-6 text-text-secondary text-lg leading-relaxed">
-        <p>
-          Hello! I'm Jeremias, a Senior Software Engineer passionate about creating technological solutions 
-          that impact thousands of users. My web development experience started in 2019, and since then 
-          I've worked at startups leading product initiatives and developing scalable applications that 
-          handle high traffic volumes.
-        </p>
+		<div class="grid gap-10 lg:grid-cols-5 lg:gap-12">
+			<!-- Bio, framed like an RPG dialogue box -->
+			<div class="lg:col-span-3">
+				<div class="bg-panel pixel-frame frame-dim space-y-4 p-6">
+					<p>
+						Hello! I'm Jeremias, a Senior Software Engineer who likes building things that thousands
+						of people actually use. I started writing for the web in 2019 and have been at startups
+						ever since, leading product work and shipping applications that hold up under real
+						traffic.
+					</p>
+					<p>
+						I've worked at <span class="text-cyan">Tech-House</span>,{' '}
+						<span class="text-cyan">Darwoft</span> and{' '}
+						<span class="text-cyan">StackZone</span>, mostly on high-demand sites where performance
+						is the feature — on the frontend and in the cloud alike.
+					</p>
+					<p>
+						I hold <span class="text-yellow">AWS CLF-C02</span>,{' '}
+						<span class="text-yellow">AWS AIF-C01</span> and{' '}
+						<span class="text-yellow">Azure AZ-900</span> certifications, which keeps me honest when designing
+						architectures that have to scale.
+					</p>
+				</div>
 
-        <p>
-          I've had the privilege of working at companies like
-          <span class="text-accent">Tech-House</span>, <span class="text-accent">Darwoft</span>, and <span class="text-accent">StackZone</span>, building robust digital solutions.
-          My main focus is maintaining high-demand websites and optimizing their performance, both in
-          frontend and cloud solutions.
-        </p>
+				<!-- Skill meters -->
+				<div class="mt-8">
+					<p class="text-line font-display text-pixel-2xs mb-4">STATS</p>
+					<ul class="space-y-3">
+						{
+							skills.map((skill) => (
+								<li class="flex flex-wrap items-center gap-x-4 gap-y-1">
+									<span class="text-dim font-display text-pixel-2xs w-32 shrink-0">
+										{skill.name}
+									</span>
+									<span class="flex gap-1" role="img" aria-label={`${skill.level} out of ${CELLS}`}>
+										{Array.from({ length: CELLS }, (_, i) => (
+											<span
+												class={`h-3 w-2 md:w-3 ${i < skill.level ? skill.color : 'bg-panel-hi'}`}
+											/>
+										))}
+									</span>
+								</li>
+							))
+						}
+					</ul>
+				</div>
+			</div>
 
-        <p>
-          I hold certifications in <span class="text-accent">AWS (CLF-C02)</span>, 
-          <span class="text-accent">AWS (AIF-C01)</span> and <span class="text-accent">Azure (AZ-900)</span>, 
-          which allows me to design scalable and efficient cloud architectures.
-        </p>
-
-        <p class="mb-8">Here are a few technologies I've been working with recently:</p>
-        
-        <div class="grid grid-cols-2 gap-2 font-monospace text-sm">
-          <div class="flex items-center">
-            <span class="text-accent mr-3">▹</span>
-            <span>JavaScript (ES6+)</span>
-          </div>
-          <div class="flex items-center">
-            <span class="text-accent mr-3">▹</span>
-            <span>TypeScript</span>
-          </div>
-          <div class="flex items-center">
-            <span class="text-accent mr-3">▹</span>
-            <span>React & Next.js</span>
-          </div>
-          <div class="flex items-center">
-            <span class="text-accent mr-3">▹</span>
-            <span>Node.js & NestJS</span>
-          </div>
-          <div class="flex items-center">
-            <span class="text-accent mr-3">▹</span>
-            <span>PostgreSQL</span>
-          </div>
-          <div class="flex items-center">
-            <span class="text-accent mr-3">▹</span>
-            <span>AWS & Azure</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- Profile photo -->
-      <div class="lg:col-span-1 flex justify-center lg:justify-end">
-        <div class="relative group">
-          <div class="w-64 h-64 md:w-80 md:h-80 lg:w-64 lg:h-64 xl:w-80 xl:h-80 rounded-lg bg-accent opacity-90 absolute -top-6 -left-6 z-0 group-hover:-top-4 group-hover:-left-4 transition-all duration-300"></div>
-          <div class="relative z-10 w-64 h-64 md:w-80 md:h-80 lg:w-64 lg:h-64 xl:w-80 xl:h-80 rounded-lg overflow-hidden border-2 border-text-muted bg-dark-secondary group-hover:border-accent transition-all duration-300">
-            <img 
-              src={engineerImage.src} 
-              alt="Jeremias Muriette - Software Engineer" 
-              class="w-full h-full object-cover object-center"
-            />
-            <div class="absolute inset-0 bg-accent opacity-10 group-hover:opacity-5 transition-opacity duration-300"></div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
+			<!-- Avatar in a framed "cartridge label" -->
+			<div class="lg:col-span-2">
+				<figure class="mx-auto w-full max-w-72">
+					<div class="bg-panel pixel-frame frame-cyan p-2">
+						<img
+							src={avatar.src}
+							alt="Jeremias Muriette"
+							width="288"
+							height="288"
+							class="aspect-square w-full object-cover"
+							style="image-rendering: pixelated;"
+						/>
+					</div>
+					<figcaption
+						class="bg-cyan text-void font-display text-pixel-2xs mt-2 px-3 py-2 text-center"
+					>
+						JEREMIAS.PNG
+					</figcaption>
+				</figure>
+			</div>
+		</div>
+	</div>
 </section>
