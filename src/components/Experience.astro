@@ -1,0 +1,187 @@
+---
+import SectionHeader from '@components/ui/SectionHeader.astro';
+
+const jobs = [
+	{
+		id: 'tech-house',
+		tab: 'TECH-HOUSE',
+		role: 'Senior Software Engineer',
+		company: 'Tech-House',
+		period: 'NOV 2024 — PRESENT',
+		bullets: [
+			'Specialise in Next.js, NestJS, Node.js, TypeScript, React, ShadCN, Tailwind, tRPC and React Query.',
+			'Build scalable, high-performance applications on modern frontend architectures.',
+			'Ship to AWS with ArgoCD and Helm, keeping CI/CD workflows smooth.',
+			'Work in agile teams, coordinating through Jira.',
+			'Led a company MVP from scratch while maintaining and extending a large-scale e-commerce platform.',
+		],
+		tags: ['React', 'Next.js', 'TypeScript', 'NestJS', 'AWS', 'tRPC'],
+	},
+	{
+		id: 'darwoft',
+		tab: 'DARWOFT',
+		role: 'Tech Lead',
+		company: 'Darwoft',
+		period: 'SEP 2024 — DEC 2024 · REMOTE, CÓRDOBA',
+		bullets: [
+			'Technical lead for a full-stack project: technical decisions, architecture and best practices.',
+			'Drove end-to-end development in React, Next.js and Java, keeping solutions maintainable and aligned with business goals.',
+			'Managed AWS infrastructure and Jenkins CI/CD pipelines for reliable automated deploys.',
+			'Set the testing standard for the team with Jest and Cypress.',
+		],
+		tags: ['React', 'Next.js', 'Java', 'AWS', 'Jenkins', 'Jest', 'Cypress'],
+	},
+	{
+		id: 'stackzone',
+		tab: 'STACKZONE',
+		role: 'Software Engineer — Frontend Lead',
+		company: 'StackZone LTD',
+		period: 'NOV 2021 — NOV 2024',
+		bullets: [
+			'Served as Frontend Leader from November 2023 onward.',
+			'Built frontend and backend with React, TypeScript, Vite, Node.js, Prisma and AWS SAM.',
+			'Led the frontend team and mentored new joiners through their ramp-up.',
+			'Ran AWS services across S3, Lambda, API Gateway, EC2 and ECS for scale and reliability.',
+			'Used Docker, Redis, PgAdmin and Figma to keep delivery efficient.',
+		],
+		tags: ['React', 'TypeScript', 'Node.js', 'AWS', 'Prisma', 'Docker'],
+	},
+	{
+		id: 'education',
+		tab: 'SCHOOL',
+		role: 'Education & Certifications',
+		company: 'Multiple Institutions',
+		period: '2018 — PRESENT',
+		bullets: [
+			'Higher Technical Institute TECLAB — Higher Technique in Programming (ongoing).',
+			'AWS Cloud Practitioner (CLF-C02) and AI Practitioner (AIF-C01) — December 2023.',
+			'Microsoft Azure Fundamentals (AZ-900) — December 2024.',
+			'National Technical University (UTNFRC) — Full Stack Web Programming Level 1, December 2021.',
+		],
+		tags: ['AWS', 'Azure', 'JavaScript', 'PHP', 'MySQL', 'Java'],
+	},
+];
+---
+
+<section
+	id="experience"
+	data-section="experience"
+	data-testid="experience"
+	class="px-4 py-16 sm:px-8 lg:px-16"
+>
+	<div class="3xl:max-w-7xl mx-auto w-full max-w-5xl xl:max-w-6xl">
+		<SectionHeader number="03" title="STAGE SELECT" />
+
+		<div class="flex flex-col gap-6 lg:flex-row lg:gap-10">
+			<!-- Cartridge slots -->
+			<div
+				role="tablist"
+				aria-label="Work history"
+				aria-orientation="vertical"
+				class="flex shrink-0 overflow-x-auto lg:flex-col lg:overflow-visible"
+			>
+				{
+					jobs.map((job, i) => (
+						<button
+							type="button"
+							role="tab"
+							id={`tab-${job.id}`}
+							aria-controls={`panel-${job.id}`}
+							aria-selected={i === 0 ? 'true' : 'false'}
+							tabindex={i === 0 ? 0 : -1}
+							data-tab={job.id}
+							class="stage-tab text-dim hover:text-cyan font-display text-pixel-2xs hover:bg-panel shrink-0 px-4 py-4 text-left whitespace-nowrap transition-colors duration-100 lg:w-40"
+						>
+							{job.tab}
+						</button>
+					))
+				}
+			</div>
+
+			<!-- Stage details -->
+			<div class="min-w-0 flex-1">
+				{
+					jobs.map((job, i) => (
+						<div
+							role="tabpanel"
+							id={`panel-${job.id}`}
+							aria-labelledby={`tab-${job.id}`}
+							hidden={i !== 0}
+							class="stage-panel bg-panel pixel-frame frame-dim p-6"
+						>
+							<h3 class="text-text text-pixel-xs sm:text-pixel-sm mb-2 leading-relaxed">
+								{job.role}
+								<span class="text-cyan block sm:inline"> @ {job.company}</span>
+							</h3>
+							<p class="text-muted font-display text-pixel-2xs mb-6">{job.period}</p>
+
+							<ul class="mb-6 space-y-3">
+								{job.bullets.map((bullet) => (
+									<li class="flex gap-3">
+										<span class="text-cyan shrink-0" aria-hidden="true">
+											▸
+										</span>
+										<span class="text-dim">{bullet}</span>
+									</li>
+								))}
+							</ul>
+
+							<ul class="flex flex-wrap gap-2">
+								{job.tags.map((tag) => (
+									<li class="bg-panel-hi text-cyan font-display text-pixel-2xs px-2 py-2">{tag}</li>
+								))}
+							</ul>
+						</div>
+					))
+				}
+			</div>
+		</div>
+	</div>
+</section>
+
+<style>
+	.stage-tab[aria-selected='true'] {
+		background: var(--color-cyan);
+		color: var(--color-void);
+	}
+</style>
+
+<script>
+	function initStageSelect() {
+		const tabs = Array.from(document.querySelectorAll<HTMLButtonElement>('.stage-tab'));
+		const panels = Array.from(document.querySelectorAll<HTMLElement>('.stage-panel'));
+		if (tabs.length === 0) return;
+
+		function select(index: number, focus = true) {
+			tabs.forEach((tab, i) => {
+				const selected = i === index;
+				tab.setAttribute('aria-selected', String(selected));
+				tab.tabIndex = selected ? 0 : -1;
+				panels[i].hidden = !selected;
+			});
+			if (focus) tabs[index].focus();
+		}
+
+		tabs.forEach((tab, i) => {
+			tab.addEventListener('click', () => select(i, false));
+
+			tab.addEventListener('keydown', (event) => {
+				const keys: Record<string, number> = {
+					ArrowRight: i + 1,
+					ArrowDown: i + 1,
+					ArrowLeft: i - 1,
+					ArrowUp: i - 1,
+					Home: 0,
+					End: tabs.length - 1,
+				};
+				const next = keys[event.key];
+				if (next === undefined) return;
+				event.preventDefault();
+				select((next + tabs.length) % tabs.length);
+			});
+		});
+	}
+
+	initStageSelect();
+	document.addEventListener('astro:page-load', initStageSelect);
+</script>

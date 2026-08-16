@@ -1,0 +1,36 @@
+---
+// Hidden until the page has scrolled. Uses a data attribute rather than the
+// `hidden` attribute, whose UA `display:none` loses to Tailwind's `flex`.
+---
+
+<button
+	type="button"
+	id="btn-back-to-top"
+	data-testid="back-to-top-button"
+	data-visible="false"
+	aria-label="Back to top"
+	class="bg-cyan text-void pixel-bevel pixel-press font-display text-pixel-xs fixed right-4 bottom-4 z-50 h-12 w-12 items-center justify-center data-[visible=false]:hidden data-[visible=true]:flex"
+>
+	▲
+</button>
+
+<script>
+	function initBackToTop() {
+		const button = document.getElementById('btn-back-to-top');
+		if (!button) return;
+
+		const sync = () => {
+			button.dataset.visible = String(window.scrollY > 400);
+		};
+
+		window.addEventListener('scroll', sync, { passive: true });
+		button.addEventListener('click', () => {
+			window.scrollTo({ top: 0, behavior: 'smooth' });
+		});
+
+		sync();
+	}
+
+	initBackToTop();
+	document.addEventListener('astro:page-load', initBackToTop);
+</script>

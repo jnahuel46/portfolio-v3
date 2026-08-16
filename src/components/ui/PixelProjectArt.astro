@@ -1,0 +1,123 @@
+---
+// Cover art for projects that have no screenshot worth showing — backends,
+// mostly, where a stock photo of a laptop says nothing. Each scene is a real
+// diagram of the system, drawn on a 64x36 grid so it stays 16:9 and crisp.
+interface Props {
+	scene: 'microservices' | 'rest-api';
+	label: string;
+}
+
+const { scene, label } = Astro.props;
+
+type Rect = { x: number; y: number; w: number; h: number; c: string };
+
+/** A hollow box: coloured border with the panel showing through. */
+function box(x: number, y: number, w: number, h: number, c: string): Rect[] {
+	return [
+		{ x, y, w, h, c },
+		{ x: x + 1, y: y + 1, w: w - 2, h: h - 2, c: 'panel' },
+	];
+}
+
+const scenes: Record<Props['scene'], Rect[]> = {
+	// Gateway → NATS broker → services → polyglot persistence.
+	microservices: [
+		// API gateway, the single public entry point
+		...box(3, 12, 14, 12, 'cyan'),
+		{ x: 6, y: 15, w: 8, h: 1, c: 'cyan' },
+		{ x: 6, y: 18, w: 6, h: 1, c: 'muted' },
+		{ x: 6, y: 21, w: 8, h: 1, c: 'muted' },
+
+		// Link into the broker
+		{ x: 17, y: 17, w: 6, h: 2, c: 'blue' },
+
+		// NATS spine
+		{ x: 23, y: 4, w: 3, h: 28, c: 'yellow' },
+
+		// Broker → each service
+		{ x: 26, y: 7, w: 5, h: 2, c: 'blue' },
+		{ x: 26, y: 17, w: 5, h: 2, c: 'blue' },
+		{ x: 26, y: 27, w: 5, h: 2, c: 'blue' },
+
+		// Three of the five services
+		...box(31, 4, 14, 8, 'cyan'),
+		{ x: 34, y: 7, w: 8, h: 1, c: 'muted' },
+		{ x: 34, y: 9, w: 5, h: 1, c: 'muted' },
+
+		...box(31, 14, 14, 8, 'cyan'),
+		{ x: 34, y: 17, w: 8, h: 1, c: 'muted' },
+		{ x: 34, y: 19, w: 5, h: 1, c: 'muted' },
+
+		...box(31, 24, 14, 8, 'cyan'),
+		{ x: 34, y: 27, w: 8, h: 1, c: 'muted' },
+		{ x: 34, y: 29, w: 5, h: 1, c: 'muted' },
+
+		// Services → their own databases
+		{ x: 45, y: 7, w: 4, h: 2, c: 'blue' },
+		{ x: 45, y: 27, w: 4, h: 2, c: 'blue' },
+
+		...box(49, 4, 12, 8, 'green'),
+		{ x: 51, y: 6, w: 8, h: 1, c: 'green' },
+		{ x: 51, y: 9, w: 8, h: 1, c: 'green' },
+
+		...box(49, 24, 12, 8, 'green'),
+		{ x: 51, y: 26, w: 8, h: 1, c: 'green' },
+		{ x: 51, y: 29, w: 8, h: 1, c: 'green' },
+	],
+
+	// Client → JWT guard → REST server → Postgres.
+	'rest-api': [
+		// Client
+		...box(3, 13, 12, 10, 'cyan'),
+		{ x: 6, y: 16, w: 6, h: 1, c: 'muted' },
+		{ x: 6, y: 19, w: 4, h: 1, c: 'muted' },
+
+		{ x: 15, y: 17, w: 5, h: 2, c: 'blue' },
+
+		// JWT shield, tapering to a point
+		{ x: 20, y: 11, w: 8, h: 8, c: 'yellow' },
+		{ x: 21, y: 19, w: 6, h: 1, c: 'yellow' },
+		{ x: 22, y: 20, w: 4, h: 1, c: 'yellow' },
+		{ x: 23, y: 21, w: 2, h: 1, c: 'yellow' },
+		// keyhole
+		{ x: 23, y: 13, w: 2, h: 2, c: 'void' },
+		{ x: 23, y: 16, w: 2, h: 3, c: 'void' },
+
+		{ x: 28, y: 17, w: 5, h: 2, c: 'blue' },
+
+		// Server rack
+		...box(33, 6, 14, 24, 'cyan'),
+		{ x: 36, y: 9, w: 7, h: 2, c: 'muted' },
+		{ x: 44, y: 9, w: 1, h: 2, c: 'green' },
+		{ x: 36, y: 13, w: 7, h: 2, c: 'muted' },
+		{ x: 44, y: 13, w: 1, h: 2, c: 'green' },
+		{ x: 36, y: 17, w: 7, h: 2, c: 'muted' },
+		{ x: 44, y: 17, w: 1, h: 2, c: 'yellow' },
+		{ x: 36, y: 21, w: 7, h: 2, c: 'muted' },
+		{ x: 44, y: 21, w: 1, h: 2, c: 'green' },
+		{ x: 36, y: 25, w: 7, h: 2, c: 'muted' },
+		{ x: 44, y: 25, w: 1, h: 2, c: 'green' },
+
+		{ x: 47, y: 17, w: 4, h: 2, c: 'blue' },
+
+		// Postgres
+		...box(51, 10, 10, 16, 'green'),
+		{ x: 53, y: 13, w: 6, h: 1, c: 'green' },
+		{ x: 53, y: 17, w: 6, h: 1, c: 'green' },
+		{ x: 53, y: 21, w: 6, h: 1, c: 'green' },
+	],
+};
+
+const rects = scenes[scene];
+---
+
+<svg
+	viewBox="0 0 64 36"
+	shape-rendering="crispEdges"
+	role="img"
+	aria-label={label}
+	class="aspect-video w-full"
+>
+	<rect x="0" y="0" width="64" height="36" fill="var(--color-void)"></rect>
+	{rects.map((r) => <rect x={r.x} y={r.y} width={r.w} height={r.h} fill={`var(--color-${r.c})`} />)}
+</svg>

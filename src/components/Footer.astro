@@ -1,0 +1,34 @@
+---
+const year = new Date().getFullYear();
+---
+
+<footer data-testid="footer" class="border-line mt-8 border-t-4 px-4 py-10 sm:px-8 lg:px-16">
+	<div class="3xl:max-w-7xl mx-auto w-full max-w-5xl space-y-4 xl:max-w-6xl">
+		<p class="text-cyan font-display text-pixel-2xs animate-blink">INSERT COIN</p>
+
+		<p class="text-muted font-display text-pixel-2xs leading-loose">
+			© {year} JEREMIAS MURIETTE — BUILT WITH ASTRO
+		</p>
+
+		<p class="text-dim">
+			<a href="mailto:jnahuel46@gmail.com" class="hover:text-cyan transition-colors duration-100"
+				>jnahuel46@gmail.com</a
+			>
+			<span class="text-muted mx-2">|</span>
+			<a
+				href="https://github.com/jnahuel46"
+				target="_blank"
+				rel="noopener noreferrer"
+				class="hover:text-cyan transition-colors duration-100">GITHUB</a
+			>
+			<span class="text-muted mx-2">|</span>
+			<span>Layout inspired by</span>{' '}
+			<a
+				href="https://brittanychiang.com"
+				target="_blank"
+				rel="noopener noreferrer"
+				class="hover:text-cyan transition-colors duration-100">Brittany Chiang</a
+			>
+		</p>
+	</div>
+</footer>

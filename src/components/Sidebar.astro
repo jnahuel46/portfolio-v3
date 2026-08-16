@@ -1,0 +1,84 @@
+---
+const items = [
+	{ id: 'home', label: 'HOME' },
+	{ id: 'about', label: 'INFO' },
+	{ id: 'experience', label: 'JOBS' },
+	{ id: 'projects', label: 'GEAR' },
+	{ id: 'contact', label: 'MAIL' },
+];
+---
+
+<nav
+	aria-label="Section navigation"
+	class="bg-void border-line fixed top-14 bottom-0 left-0 z-40 flex w-16 flex-col items-center justify-center border-r-4 py-4 md:top-16 md:w-24 md:py-6"
+>
+	<ul class="flex flex-col gap-2 md:gap-3">
+		{
+			items.map((item, i) => (
+				<li>
+					<a
+						href={`#${item.id}`}
+						data-nav={item.id}
+						class="nav-tile text-muted hover:text-cyan flex w-10 flex-col items-center gap-1 px-1 py-2 transition-colors duration-100 md:w-16"
+					>
+						<span class="font-display text-pixel-xs md:text-pixel-sm">
+							{String(i + 1).padStart(2, '0')}
+						</span>
+						<span class="font-display text-pixel-2xs hidden md:inline">{item.label}</span>
+						<span class="nav-bar bg-line h-1 w-4 transition-all duration-100 md:w-8" />
+					</a>
+				</li>
+			))
+		}
+	</ul>
+</nav>
+
+<style>
+	.nav-tile.active {
+		color: var(--color-yellow);
+	}
+
+	.nav-tile.active .nav-bar {
+		background: var(--color-yellow);
+		height: 0.5rem;
+	}
+</style>
+
+<script>
+	// Highlights the tile for whichever section owns the most of the viewport.
+	function initSectionTracking() {
+		const sections = document.querySelectorAll<HTMLElement>('section[data-section]');
+		const tiles = document.querySelectorAll<HTMLAnchorElement>('.nav-tile');
+		if (sections.length === 0 || tiles.length === 0) return;
+
+		const ratios = new Map<string, number>();
+
+		const observer = new IntersectionObserver(
+			(entries) => {
+				for (const entry of entries) {
+					const id = entry.target.getAttribute('data-section');
+					if (id) ratios.set(id, entry.intersectionRatio);
+				}
+
+				let winner = '';
+				let best = 0;
+				for (const [id, ratio] of ratios) {
+					if (ratio > best) {
+						best = ratio;
+						winner = id;
+					}
+				}
+
+				for (const tile of tiles) {
+					tile.classList.toggle('active', tile.dataset.nav === winner);
+				}
+			},
+			{ threshold: [0, 0.25, 0.5, 0.75, 1] }
+		);
+
+		for (const section of sections) observer.observe(section);
+	}
+
+	initSectionTracking();
+	document.addEventListener('astro:page-load', initSectionTracking);
+</script>

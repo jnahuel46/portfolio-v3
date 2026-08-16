@@ -1,0 +1,44 @@
+---
+import SectionHeader from '@components/ui/SectionHeader.astro';
+---
+
+<section
+	id="contact"
+	data-section="contact"
+	data-testid="contact"
+	class="px-4 py-16 sm:px-8 lg:px-16"
+>
+	<div class="mx-auto w-full max-w-3xl xl:max-w-4xl">
+		<SectionHeader number="05" title="WHAT'S NEXT?" />
+
+		<!-- RPG dialogue box: speaker tag, message, blinking continue arrow -->
+		<div class="relative">
+			<span class="bg-cyan text-void font-display text-pixel-2xs absolute -top-4 left-6 px-3 py-2">
+				JEREMIAS
+			</span>
+
+			<div class="bg-panel pixel-frame frame-cyan p-6 pt-8 sm:p-8 sm:pt-10">
+				<h3 class="text-text text-pixel-sm sm:text-pixel-base mb-6 leading-relaxed">
+					GET IN TOUCH
+				</h3>
+
+				<p class="text-dim mb-6">
+					I'm not actively looking for new opportunities right now, but my inbox is always open.
+					Whether you have a question or just want to say hi, I'll do my best to get back to you.
+				</p>
+
+				<div class="flex flex-col gap-4 sm:flex-row sm:items-center">
+					<a
+						href="mailto:jnahuel46@gmail.com"
+						class="bg-cyan text-void pixel-bevel pixel-press font-display text-pixel-2xs sm:text-pixel-xs inline-flex items-center justify-center gap-3 px-6 py-4"
+					>
+						<span aria-hidden="true">✉</span> SAY HELLO
+					</a>
+					<span class="text-muted font-display text-pixel-2xs"> jnahuel46@gmail.com </span>
+				</div>
+
+				<span class="text-cyan animate-blink absolute right-6 bottom-4" aria-hidden="true">▼</span>
+			</div>
+		</div>
+	</div>
+</section>

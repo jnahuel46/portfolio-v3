@@ -1,0 +1,209 @@
+---
+import PixelProjectArt from '@components/ui/PixelProjectArt.astro';
+import SectionHeader from '@components/ui/SectionHeader.astro';
+import { getCollection } from 'astro:content';
+import { Image } from 'astro:assets';
+
+import blackjackImg from '@assets/images/blackjack.png';
+import chatAiImg from '@assets/images/chat-ai.png';
+import gifAppImg from '@assets/images/gifApp.png';
+import heroesImg from '@assets/images/heroes.png';
+import journalImg from '@assets/images/journal.png';
+import nextDashboardImg from '@assets/images/next-js-dashboard.png';
+import nextJsCourseImg from '@assets/images/next-js-course.png';
+import npmPackageImg from '@assets/images/npm-package.png';
+import restServerImg from '@assets/images/rest-server.png';
+import storybookImg from '@assets/images/storybook.png';
+import todoAppImg from '@assets/images/todo-app.png';
+import twoStrokeImg from '@assets/images/two-stroke.png';
+import weatherImg from '@assets/images/weather.png';
+
+// Keyed by each project's `img_alt`.
+const sources: Record<string, ImageMetadata> = {
+	blackjack: blackjackImg,
+	'chat-ai': chatAiImg,
+	gifApp: gifAppImg,
+	heroe: heroesImg,
+	journal: journalImg,
+	'next-js-course': nextJsCourseImg,
+	'next-js-dashboard': nextDashboardImg,
+	npm: npmPackageImg,
+	'rest-server': restServerImg,
+	storybook: storybookImg,
+	'todo-app': todoAppImg,
+	'two-stroke': twoStrokeImg,
+	weather: weatherImg,
+};
+
+const projects = await getCollection('projects', ({ data }) => !data.inProgress);
+
+// The glob loader strips the file extension, so ids look like "project-000".
+const featuredOrder = ['project-000', 'project-00', 'project-001', 'project-0'];
+
+const sorted = projects.sort((a, b) => {
+	const ai = featuredOrder.indexOf(a.id);
+	const bi = featuredOrder.indexOf(b.id);
+	if (ai !== -1 || bi !== -1) {
+		return (ai === -1 ? Infinity : ai) - (bi === -1 ? Infinity : bi);
+	}
+	return a.id.localeCompare(b.id, undefined, { numeric: true });
+});
+
+const featured = sorted.slice(0, 3);
+const others = sorted.slice(3, 11);
+---
+
+<section
+	id="projects"
+	data-section="projects"
+	data-testid="projects"
+	class="px-4 py-16 sm:px-8 lg:px-16"
+>
+	<div class="3xl:max-w-7xl mx-auto w-full max-w-5xl xl:max-w-6xl">
+		<SectionHeader number="04" title="INVENTORY" />
+
+		<!-- Featured items -->
+		<div class="space-y-12 lg:space-y-16">
+			{
+				featured.map((project, index) => {
+					const thumb = project.data.img_alt ? sources[project.data.img_alt] : undefined;
+					const flipped = index % 2 === 1;
+
+					return (
+						<article class="bg-panel pixel-frame frame-dim grid gap-6 p-5 lg:grid-cols-12 lg:items-center lg:gap-8">
+							{/* CRT-style screen */}
+							<div class={`lg:col-span-7 ${flipped ? 'lg:order-2' : ''}`}>
+								<div class="bg-void pixel-frame frame-cyan p-2">
+									{project.data.art ? (
+										<PixelProjectArt
+											scene={project.data.art}
+											label={`Architecture diagram for ${project.data.title}`}
+										/>
+									) : thumb ? (
+										<Image
+											src={thumb}
+											alt={`Screenshot of ${project.data.title}`}
+											widths={[640, 1024]}
+											sizes="(min-width: 1024px) 640px, 100vw"
+											loading="lazy"
+											class="aspect-video w-full object-cover"
+										/>
+									) : (
+										<div class="bg-panel-hi text-muted font-display text-pixel-2xs flex aspect-video w-full items-center justify-center">
+											NO SIGNAL
+										</div>
+									)}
+								</div>
+							</div>
+
+							<div class={`lg:col-span-5 ${flipped ? 'lg:order-1' : ''}`}>
+								<p class="text-yellow font-display text-pixel-2xs mb-3">★ FEATURED ITEM</p>
+								<h3 class="text-pixel-xs sm:text-pixel-sm mb-4 leading-relaxed">
+									<a
+										href={project.data.link}
+										target="_blank"
+										rel="noopener noreferrer"
+										class="text-text hover:text-cyan transition-colors duration-100"
+									>
+										{project.data.title}
+									</a>
+								</h3>
+
+								<p class="text-dim mb-4">{project.data.description}</p>
+
+								<ul class="mb-5 flex flex-wrap gap-2">
+									{project.data.tags.map((tag) => (
+										<li class="bg-panel-hi text-cyan font-display text-pixel-2xs px-2 py-2">
+											{tag}
+										</li>
+									))}
+								</ul>
+
+								<div class="flex flex-wrap gap-3">
+									<a
+										href={project.data.link}
+										target="_blank"
+										rel="noopener noreferrer"
+										class="bg-cyan text-void pixel-bevel pixel-press font-display text-pixel-2xs px-4 py-3"
+									>
+										USE
+									</a>
+									<a
+										href={project.data.goToRepo}
+										target="_blank"
+										rel="noopener noreferrer"
+										class="text-dim hover:text-cyan pixel-frame frame-dim hover:frame-cyan pixel-press font-display text-pixel-2xs px-4 py-3"
+									>
+										SOURCE
+									</a>
+								</div>
+							</div>
+						</article>
+					);
+				})
+			}
+		</div>
+
+		<!-- Everything else, as inventory slots -->
+		<h3 class="text-text text-pixel-xs sm:text-pixel-sm mt-16 mb-8">OTHER ITEMS</h3>
+
+		<div class="3xl:grid-cols-4 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+			{
+				others.map((project) => (
+					<article class="bg-panel pixel-frame frame-dim hover:frame-cyan pixel-press flex flex-col p-5">
+						<div class="mb-4 flex items-start justify-between gap-3">
+							{/* Pixel floppy disk, drawn rather than fetched */}
+							<svg
+								class="text-cyan h-8 w-8 shrink-0"
+								viewBox="0 0 16 16"
+								fill="currentColor"
+								shape-rendering="crispEdges"
+								aria-hidden="true"
+							>
+								<path d="M1 1h11l3 3v11H1V1zm2 2v4h8V3H3zm1 7h8v4H4v-4z" />
+							</svg>
+							<div class="flex gap-2">
+								<a
+									href={project.data.goToRepo}
+									target="_blank"
+									rel="noopener noreferrer"
+									class="text-muted hover:text-cyan font-display text-pixel-2xs transition-colors duration-100"
+								>
+									SRC
+								</a>
+								<a
+									href={project.data.link}
+									target="_blank"
+									rel="noopener noreferrer"
+									class="text-muted hover:text-cyan font-display text-pixel-2xs transition-colors duration-100"
+								>
+									RUN
+								</a>
+							</div>
+						</div>
+
+						<h4 class="text-text text-pixel-2xs mb-3 leading-relaxed">{project.data.title}</h4>
+						<p class="text-dim mb-4 line-clamp-4 grow text-base">{project.data.description}</p>
+
+						<ul class="flex flex-wrap gap-1">
+							{project.data.tags.slice(0, 4).map((tag) => (
+								<li class="text-muted font-display text-pixel-2xs">{tag}</li>
+							))}
+						</ul>
+					</article>
+				))
+			}
+		</div>
+
+		<div class="mt-12">
+			<a
+				href="https://github.com/jnahuel46"
+				target="_blank"
+				rel="noopener noreferrer"
+				class="text-cyan pixel-frame frame-cyan pixel-press hover:bg-panel font-display text-pixel-2xs sm:text-pixel-xs inline-block px-6 py-4"
+			>
+				OPEN FULL INVENTORY ▶
+			</a>
+		</div>
+	</div>
+</section>

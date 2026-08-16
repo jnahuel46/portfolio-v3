@@ -1,0 +1,68 @@
+---
+import Footer from '@components/Footer.astro';
+import Sidebar from '@components/Sidebar.astro';
+import Starfield from '@components/Starfield.astro';
+import StatusBar from '@components/StatusBar.astro';
+import { Font } from 'astro:assets';
+import { SEO } from 'astro-seo';
+import '../styles/global.css';
+
+interface Props {
+	title?: string;
+}
+
+const { title = 'Jeremias Muriette | Software Engineer' } = Astro.props;
+
+const description =
+	'Jeremias Muriette — Senior Software Engineer building scalable React, Next.js, NestJS and TypeScript applications on AWS.';
+---
+
+<!doctype html>
+<html lang="en" data-testid="html">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<meta name="generator" content={Astro.generator} />
+		<meta name="theme-color" content="#10101c" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+		<Font cssVariable="--font-press-start" preload />
+		<Font cssVariable="--font-vt323" preload />
+
+		<SEO
+			title={title}
+			description={description}
+			openGraph={{
+				basic: {
+					title: 'Jeremias Muriette | Software Engineer',
+					type: 'website',
+					image: '/favicon.svg',
+				},
+			}}
+		/>
+	</head>
+
+	<!-- No background utility here: an opaque body would paint over the
+	     starfield canvas sitting at z-index:-10. The black is on <html>. -->
+	<body class="text-dim min-h-screen">
+		<a
+			href="#main"
+			class="bg-cyan text-void font-display text-pixel-xs sr-only px-4 py-3 focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-200"
+		>
+			SKIP TO CONTENT
+		</a>
+
+		<Starfield />
+		<StatusBar />
+		<Sidebar />
+
+		<div class="pt-14 pl-16 md:pt-16 md:pl-24">
+			<main id="main">
+				<slot />
+			</main>
+			<Footer />
+		</div>
+
+		<div class="crt-overlay" aria-hidden="true"></div>
+	</body>
+</html>

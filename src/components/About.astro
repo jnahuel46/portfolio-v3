@@ -1,0 +1,58 @@
+---
+import SectionHeader from '@components/ui/SectionHeader.astro';
+import engineerImage from '@assets/images/engineer.png';
+import { Image } from 'astro:assets';
+---
+
+<section id="about" data-section="about" data-testid="about" class="px-4 py-16 sm:px-8 lg:px-16">
+	<div class="3xl:max-w-7xl mx-auto w-full max-w-5xl xl:max-w-6xl">
+		<SectionHeader number="02" title="ABOUT ME" />
+
+		<div class="grid gap-10 lg:grid-cols-5 lg:gap-12">
+			<!-- Bio, framed like an RPG dialogue box -->
+			<div class="lg:col-span-3">
+				<div class="bg-panel pixel-frame frame-dim space-y-4 p-6">
+					<p>
+						Hello! I'm Jeremias, a Senior Software Engineer who likes building things that thousands
+						of people actually use. I started writing for the web in 2019 and have been at startups
+						ever since, leading product work and shipping applications that hold up under real
+						traffic.
+					</p>
+					<p>
+						I've worked at <span class="text-cyan">Tech-House</span>,{' '}
+						<span class="text-cyan">Darwoft</span> and{' '}
+						<span class="text-cyan">StackZone</span>, mostly on high-demand sites where performance
+						is the feature — on the frontend and in the cloud alike.
+					</p>
+					<p>
+						I hold <span class="text-cyan">AWS CLF-C02</span>,{' '}
+						<span class="text-cyan">AWS AIF-C01</span> and{' '}
+						<span class="text-cyan">Azure AZ-900</span> certifications, which keeps me honest when designing
+						architectures that have to scale.
+					</p>
+				</div>
+			</div>
+
+			<!-- The Galaga cabinet leads the page in the hero, so the portrait sits
+			     here instead — which is where a portrait belongs anyway. -->
+			<div class="lg:col-span-2 lg:flex lg:items-center">
+				<figure class="mx-auto w-full max-w-xs">
+					<div class="bg-panel pixel-frame frame-cyan p-2">
+						<Image
+							src={engineerImage}
+							alt="Jeremias Muriette"
+							widths={[320, 640]}
+							sizes="(min-width: 1024px) 320px, 90vw"
+							class="aspect-square w-full object-cover"
+						/>
+					</div>
+					<figcaption
+						class="bg-cyan text-void font-display text-pixel-2xs mt-2 px-3 py-2 text-center"
+					>
+						JEREMIAS.PNG
+					</figcaption>
+				</figure>
+			</div>
+		</div>
+	</div>
+</section>
