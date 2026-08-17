@@ -7,7 +7,12 @@ const roles = ['SENIOR SOFTWARE ENGINEER', 'REACT + NEXT.JS', 'NESTJS / NODE', '
 
 const links = [
 	{ name: 'github', label: 'GITHUB', href: 'https://github.com/jnahuel46' },
-	{ name: 'linkedin', label: 'LINKEDIN', href: 'https://www.linkedin.com/in/jeremias-muriette/' },
+	{
+		name: 'linkedin',
+		label: 'LINKEDIN',
+		// The %C3%AD is the accented "í" — leave it percent-encoded.
+		href: 'https://www.linkedin.com/in/jerem%C3%ADas-muriette-1711b0207/',
+	},
 	{ name: 'cv', label: 'CV', href: '/jere-muriette-se.pdf' },
 ] as const;
 ---

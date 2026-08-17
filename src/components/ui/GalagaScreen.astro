@@ -8,7 +8,7 @@
 // keep scrolling the page the rest of the time.
 ---
 
-<figure class="mx-auto w-full max-w-sm">
+<figure class="w-full">
 	<!-- TV shell -->
 	<div class="bg-panel-hi pixel-frame frame-line p-3">
 		<div
@@ -26,7 +26,13 @@
 				<span id="galaga-hi" class="text-yellow">00000</span>
 			</div>
 
-			<canvas id="galaga-canvas" class="h-full w-full" aria-hidden="true"></canvas>
+			<!-- The backing store is integer-scaled, but CSS still stretches it to
+			     the element box; without this the browser resamples it smooth. -->
+			<canvas
+				id="galaga-canvas"
+				class="h-full w-full"
+				style="image-rendering: pixelated;"
+				aria-hidden="true"></canvas>
 
 			<!-- Lives, drawn as little fighters -->
 			<div
@@ -41,7 +47,7 @@
 			<div
 				id="galaga-overlay"
 				data-on="true"
-				class="absolute inset-0 z-20 flex-col items-center justify-center gap-3 bg-black/70 p-4 text-center data-[on=false]:hidden data-[on=true]:flex"
+				class="absolute inset-0 z-20 flex-col items-center justify-center gap-3 bg-black/85 p-4 text-center data-[on=false]:hidden data-[on=true]:flex"
 			>
 				<p id="galaga-overlay-title" class="text-yellow font-display text-pixel-xs animate-blink">
 					GALAGA
