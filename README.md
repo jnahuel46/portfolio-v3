@@ -132,6 +132,5 @@ diagram of the real architecture from
 
 ## Credits
 
-Original template by [Veranika Kasparevych](https://github.com/veranikabarel).
-Layout lineage from [Brittany Chiang](https://brittanychiang.com).
+Original v2 template by [Veranika Kasparevych](https://github.com/veranikabarel).
 Assets designed by [Freepik](https://www.freepik.com).

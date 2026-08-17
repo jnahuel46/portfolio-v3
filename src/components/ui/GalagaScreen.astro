@@ -1,7 +1,8 @@
 ---
-// A CRT that plays itself until you take over. Everything is drawn on a 96x128
+// A CRT that plays itself until you take over. Everything is drawn on a 90x96
 // virtual canvas with smoothing off, so the sprites stay true pixels however
-// large the set gets scaled.
+// large the set gets scaled. That 15:16 grid matches the stage box exactly —
+// if the two ever drift apart the sprites get stretched out of square.
 //
 // States: attract (an AI demo, the default) -> playing -> paused / gameover.
 // Keyboard is only ever captured while actually playing, so arrows and space
@@ -14,7 +15,7 @@
 		<div
 			id="galaga-stage"
 			tabindex="-1"
-			class="bg-void pixel-frame frame-cyan relative aspect-3/4 w-full focus:outline-none"
+			class="bg-void pixel-frame frame-cyan relative aspect-15/16 w-full focus:outline-none"
 		>
 			<!-- HUD lives in the DOM so it uses the real display face -->
 			<div
@@ -106,9 +107,10 @@
 		const overlay = overlayEl;
 		const playBtn = playEl;
 
-		// Virtual resolution. Everything below is in these units.
-		const W = 96;
-		const H = 128;
+		// Virtual resolution, 15:16 — the same ratio as the stage box, so the
+		// backing store never gets stretched unevenly and the sprites stay square.
+		const W = 90;
+		const H = 96;
 
 		const C: Record<string, string> = {
 			r: '#e52521', // Galaga red
@@ -317,11 +319,12 @@
 			paintLives();
 		}
 
+		// Six columns of 12 with an 8-wide sprite spans 68, centred in 90.
 		function slotX(col: number) {
-			return 12 + col * 12;
+			return 11 + col * 12;
 		}
 		function slotY(row: number) {
-			return 26 + row * 12;
+			return 22 + row * 12;
 		}
 
 		function spawnFormation() {
