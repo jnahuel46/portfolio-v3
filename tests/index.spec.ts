@@ -1,5 +1,12 @@
 import { expect, test } from '@playwright/test';
 
+declare global {
+	interface Window {
+		/** Set by the keyboard-capture probe below. */
+		__prevented: boolean | null;
+	}
+}
+
 test.beforeEach(async ({ page }) => {
 	await page.goto('/');
 });
@@ -71,6 +78,61 @@ test.describe('galaga screen', () => {
 		const before = await sample();
 		await page.waitForTimeout(600);
 		expect(await sample()).not.toBe(before);
+	});
+
+	test('insert coin swaps the demo for a real game', async ({ page }) => {
+		const overlay = page.locator('#galaga-overlay');
+		await expect(overlay).toHaveAttribute('data-on', 'true');
+		await expect(page.locator('#galaga-lives span')).toHaveCount(0);
+
+		await page.getByRole('button', { name: /INSERT COIN/ }).click();
+
+		await expect(overlay).toHaveAttribute('data-on', 'false');
+		await expect(page.locator('#galaga-lives span')).toHaveCount(3);
+
+		await page.keyboard.press('Escape');
+		await expect(overlay).toHaveAttribute('data-on', 'true');
+	});
+
+	// The whole reason the game gates on an explicit start: arrows and space
+	// have to keep scrolling the page everywhere else.
+	//
+	// Asserting on defaultPrevented rather than on scrollY — late-loading fonts
+	// shift the layout and the browser's scroll anchoring moves the page on its
+	// own, which made a scroll-based assertion flaky under load.
+	test('only captures the keyboard while a game is running', async ({ page }) => {
+		// Arm and read as two separate round-trips. Returning a pending promise
+		// from evaluate does not guarantee the listener is attached before the
+		// keypress lands, which timed out on the slower mobile emulation.
+		const arm = () =>
+			page.evaluate(() => {
+				window.__prevented = null;
+				// Registered after the game's own listener, so it sees the flag.
+				window.addEventListener(
+					'keydown',
+					(e) => {
+						window.__prevented = e.defaultPrevented;
+					},
+					{ once: true }
+				);
+			});
+		const read = () => page.evaluate(() => window.__prevented);
+
+		const press = async (key: string, captured: boolean) => {
+			await arm();
+			await page.keyboard.press(key);
+			await expect.poll(read, { message: `${key} captured=${captured}` }).toBe(captured);
+		};
+
+		await press('ArrowDown', false);
+
+		await page.getByRole('button', { name: /INSERT COIN/ }).click();
+		for (const key of ['ArrowDown', 'ArrowLeft', 'ArrowRight', 'Space']) {
+			await press(key, true);
+		}
+
+		await page.keyboard.press('Escape');
+		await press('ArrowDown', false);
 	});
 });
 
